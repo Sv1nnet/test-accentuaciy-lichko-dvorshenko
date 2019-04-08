@@ -41,17 +41,19 @@ textarea
 
 .overlay
   overflow-x: hidden
-  display: none
   position: absolute
-  z-index: 1000
+  z-index: -1
   top: 0
   left: 0
   height: 100%
   width: 100%
+  transition: z-index 1s
   &.active
-    display: block
+    z-index: 1000
     .overlay-bg
       opacity: .3
+    .overlay-content
+      transform: translateX(0)
   .close-overlay
     position: absolute
     width: 40px
@@ -84,7 +86,6 @@ textarea
     right: 0
     transition: .3s
     z-index: 1001
-    padding: 20px
     h2
       font-size: em(24)
       line-height: 24px
@@ -92,6 +93,101 @@ textarea
     p
       margin:
         top: 15px
+    &-item
+      position: absolute
+      top: 0
+      left: 0
+      padding: 15px
+      > .overlay-content-warning
+        margin:
+          top: 15px
+        padding:
+          bottom: 5px
+          top: 5px
+        border:
+          top: $accent-color 1px solid
+          bottom: $accent-color 1px solid
+        text-align: center
+        h3
+          color: red
+          font-size: em(18)
+        p
+          margin:
+            top: 6px
+          font-size: em(15)
+      .accentuation-type
+        margin:
+          top: 15px
+        border: lighten($accent-color, 60) 1px solid
+        border-bottom: none
+        a
+          display: block
+          line-height: 35px
+          background: $main-background-color
+          border-bottom: lighten($accent-color, 60) 1px solid
+          padding:
+            left: 9px
+          font-weight: bold
+          position: relative
+          &:after
+            position: absolute
+            right: 0
+            top: 11px
+            transition: .4s
+            transform-origin: 15%
+            content: ''
+            display: block
+            border: 7px solid transparent
+            border-left: 7px solid $accent-color
+        .accentuation-type-content
+          padding:
+            left: 6px
+            right: 6px
+          max-height: 0
+          overflow: hidden
+          transition: .3s
+          p
+            margin:
+              top: 3px
+              bottom: 6px
+            font-size: em(15)
+          ul
+            li:first-child
+              font-weight: bold
+              margin:
+                left: 0px
+                top: 15px
+            li
+              font-size: em(15)
+              margin:
+                top: 6px
+                left: 15px
+              position: relative
+              &:not(:first-child):after
+                content: ''
+                display: block
+                width: 8px
+                height: 2px
+                background: black
+                position: absolute
+                left: -15px
+                top: 50%
+            &:last-child
+              li:last-child
+                margin:
+                  bottom: 6px
+        &.active 
+          a
+            &:after
+              transform: rotateZ(90deg)
+          .accentuation-type-content
+            transition: .3s
+            max-height: 10000px
+            border-bottom: lighten($accent-color, 60) 1px solid
+
+              
+
+
   .overlay-bg
     position: absolute
     top: 0

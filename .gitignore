@@ -22,6 +22,8 @@ app/sass/components
 
 # other
 /Modified_PDO_(TLA)
+/Content
+/Template
 
 npm-debug.log*
 yarn-debug.log*

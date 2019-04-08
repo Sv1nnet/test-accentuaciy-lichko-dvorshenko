@@ -1,0 +1,103 @@
+@import "vars"
+@import "sizes"
+
+.btn
+  max-width: $main-max-width
+  line-height: 74px
+  font-size: em(28)
+  text-align: center
+  margin: 0 auto
+  color: $main-background-color
+  transition: .2s
+  &:hover
+    background: $accent-hover-color
+  &:active
+    background: darken($accent-color, 15)
+  &:not(:active)
+    background-color: $accent-color
+
+input[type=email], textarea
+  max-width: $main-max-width
+  width: $main-max-width
+  margin: 0  auto
+  display: block
+  border: $accent-color 1px solid
+  padding: 10px
+  &::placeholder
+    color: #a6a6a6
+    font-style: italic
+
+textarea
+  height: 120px
+  resize: both
+
+.redirect-link
+  color: $accent-color
+  text-decoration: underline
+
+.social-net-icon
+  width: 65px
+  height: 65px
+
+.overlay
+  overflow-x: hidden
+  display: none
+  position: absolute
+  z-index: 1000
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  &.active
+    display: block
+    .overlay-bg
+      opacity: .3
+  .close-overlay
+    position: absolute
+    width: 40px
+    height: 40px
+    padding: 6px
+    right: 0
+    top: 0
+    z-index: 1002
+    &::before
+      content: ''
+      width: 35px
+      height: 3px
+      background: black
+      display: block
+      transform: rotate(45deg) translateX(7px) translateY(11px)
+    &::after
+      content: ''
+      width: 35px
+      height: 3px
+      background: black
+      display: block
+      transform: rotate(-45deg) translateX(-9px) translateY(5px)
+  .overlay-content
+    position: absolute
+    width: 90%
+    transform: translateX(100%)
+    height: 100%
+    overflow-y: auto
+    background: white
+    right: 0
+    transition: .3s
+    z-index: 1001
+    padding: 20px
+    h2
+      font-size: em(24)
+      line-height: 24px
+      max-width: 195px
+    p
+      margin:
+        top: 15px
+  .overlay-bg
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    background: black
+    transition: .2s
+    opacity: 0

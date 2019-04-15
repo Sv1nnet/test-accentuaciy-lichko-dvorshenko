@@ -1,0 +1,117 @@
+@import "../../libs/css/normalize.css"
+@import "../sizes"
+@import "../reset"
+@import "../components"
+
+.instructions-container
+  position: fixed
+  z-index: 1000
+  top: 0
+  border: $accent-color 1px solid
+  border-bottom: transparent 1px solid
+  &:after
+    position: absolute
+    right: 12px
+    top: 17px
+    transition: .3s
+    transform-origin: 15%
+    content: ''
+    display: block
+    border: 7px solid transparent
+    border-left: 7px solid $accent-color
+  h1
+    line-height: 45px
+    margin: 0
+    text-align: center
+    font-size: em(24)
+    border-bottom: $accent-color 1px solid
+    background: $main-background-color
+  .instructions-content
+    background-color: white
+    max-height: 0
+    overflow: hidden
+    transition: .3s
+    padding:
+      top: 0
+      bottom: 0
+      left: 10px
+      right: 10px
+  &.active
+    border-bottom: $accent-color 1px solid
+    &:after
+      transform: rotate(90deg)
+    .instructions-content
+      max-height: 20em
+      padding: 10px
+      
+.test-container
+  margin:
+    top: 47px
+  .progressbar-container
+    position: relative
+    text-align: center
+    border: black 1px solid
+    border-top: transparent 0px solid
+    height: 16px;
+    .progressbar-line
+      position: absolute
+      height: 100%
+      background-color: black
+      width: 100%
+      z-index: -1
+      transform: translate(-50%)
+    .progressbar-counter
+      padding:
+        left: 2px
+        right: 2px
+      display: inline-block
+      line-height: 14px;
+      position: relative;
+      top: -2px;
+      // padding:
+      //   top: 2px
+      text-align: center
+      background-color: rgba(255, 255, 255, .8)
+      span
+        font-size: em(12)
+        color: black
+        line-height: 14px;
+  .questions-container
+    min-height: 126px
+    overflow: hidden
+    .questions
+      width: 300%
+      transform: translate(-33.33333337%)
+      .question
+        width: 33.3333337%
+        float: left
+        padding:
+          top: 20px
+          bottom: 20px
+          left: 5px
+          right: 5px
+        p
+          text-align: center
+  .answer-container
+    width: 100%
+    .answer
+      li:not(:last-child)
+        border-right: transparent 0px solid
+      li
+        width: calc(100% / 7)
+        float: left
+        border: black 1px solid
+        text-align: center
+        input[type=radio]
+          display: none
+        input[type=radio]:checked
+          & + label
+            background-color: $accent-color
+            color: white
+        label
+          transition: .2s
+          display: block
+          width: 100%
+          line-height: 41px
+
+

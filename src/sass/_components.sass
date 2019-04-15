@@ -1,6 +1,12 @@
 @import "vars"
 @import "sizes"
 
+.clearfix
+  &:after
+    content: ''
+    display: table
+    clear: both
+    
 .btn
   max-width: $main-max-width
   line-height: 74px
@@ -15,6 +21,15 @@
     background: darken($accent-color, 15)
   &:not(:active)
     background-color: $accent-color
+  a
+    &:hover
+      background: $accent-hover-color
+    &:active
+      background: lighten($accent-color, 15)
+      color: white
+    &:not(:active)
+      background-color: $accent-color
+      color: white
 
 input[type=email], textarea
   max-width: $main-max-width
@@ -41,13 +56,19 @@ textarea
 
 .overlay
   overflow-x: hidden
-  position: absolute
+  position: fixed
   z-index: -1
   top: 0
   left: 0
   height: 100%
   width: 100%
-  transition: z-index 1s
+  transition: z-index .3s
+  &-not-specialist
+    width: 90%
+    height: 100%
+    float: right
+    position: relative
+    z-index: 1001
   &.active
     z-index: 1000
     .overlay-bg
@@ -55,6 +76,7 @@ textarea
     .overlay-content
       transform: translateX(0)
   .close-overlay
+    cursor: pointer
     position: absolute
     width: 40px
     height: 40px
@@ -78,7 +100,7 @@ textarea
       transform: rotate(-45deg) translateX(-9px) translateY(5px)
   .overlay-content
     position: absolute
-    width: 90%
+    width: 100%
     transform: translateX(100%)
     height: 100%
     overflow-y: auto
@@ -98,6 +120,9 @@ textarea
       top: 0
       left: 0
       padding: 15px
+      display: none
+      &.active
+        display: block
       > .overlay-content-warning
         margin:
           top: 15px
@@ -133,7 +158,7 @@ textarea
             position: absolute
             right: 0
             top: 11px
-            transition: .4s
+            transition: .7s
             transform-origin: 15%
             content: ''
             display: block
@@ -145,7 +170,7 @@ textarea
             right: 6px
           max-height: 0
           overflow: hidden
-          transition: .3s
+          transition: .7s
           p
             margin:
               top: 3px
@@ -181,12 +206,13 @@ textarea
             &:after
               transform: rotateZ(90deg)
           .accentuation-type-content
-            transition: .3s
-            max-height: 10000px
+            // transition: 5s
+            max-height: 1500px
             border-bottom: lighten($accent-color, 60) 1px solid
 
               
-
+.overlay
+  
 
   .overlay-bg
     position: absolute

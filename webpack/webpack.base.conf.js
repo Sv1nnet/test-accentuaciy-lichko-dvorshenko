@@ -12,7 +12,7 @@ const PATHS = {
     test: path.join(__dirname, '../src/test'),
   },
   assets: 'assets/',
-}
+};
 
 const main = new MiniCssExtractPlugin({
   filename: 'css/[name].css',
@@ -30,7 +30,7 @@ module.exports = {
   },
   entry: {
     main: [
-      './src/sass/main.sass'
+      './src/sass/main.sass',
     ],
     index: [
       PATHS.src,

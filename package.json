@@ -4,7 +4,7 @@
   "description": "landing page",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack-dev-server --config ./webpack/webpack.dev.conf.js --host 192.168.1.159",
+    "dev": "webpack-dev-server --config ./webpack/webpack.dev.conf.js --host localhost",
     "build": "webpack --config ./webpack/webpack.build.conf.js"
   },
   "browserify": {

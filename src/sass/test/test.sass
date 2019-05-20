@@ -111,6 +111,7 @@
             background-color: $accent-color
             color: white
         label
+          cursor: pointer
           transition: .2s
           display: block
           width: 100%
@@ -118,6 +119,7 @@
 
 .nav-arrows-container
   .left-arrow, .right-arrow
+    cursor: pointer
     display: block
     min-height: 64px
     line-height: 58px
@@ -127,6 +129,8 @@
     border: black 1px solid
     border-bottom: transparent 0px solid
     text-align: center
+    &:focus
+      outline: none
     .arrow
       display: inline-block
       min-width: 90px

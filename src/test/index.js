@@ -231,6 +231,7 @@ const state = {
       suicideAttempts: undefined,
     },
   },
+  _questionRestoreInterval: undefined,
   _rightBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
   _leftBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
   _rightBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
@@ -259,6 +260,7 @@ window.onload = function() {
     },
   };
 
+  // Answer object
   const answerBar = {
     answerInputs: $('input[type=radio]'),
     currentAnswer: undefined,
@@ -388,7 +390,7 @@ window.onload = function() {
       });
 
       state.currentQuestion += 1;
-      
+
       const answer = answerBar.getCurrentAnswer();
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
@@ -412,29 +414,5 @@ window.onload = function() {
     $(questionElements[1]).text(questions[currentQuestion]);
     $(questionElements[0]).text(questions[currentQuestion - 1]);
     $(questionElements[2]).text(questions[currentQuestion + 1]);
-  }
-
-  // Check if we can press left/right arrow once next or previous question was get
-  function setArrowState(arrow, arrowToCheck, arrowToSet, isAnswer) {
-    if (arrow === 'right') {
-      // If the question is the last then set right arrow not-active
-      if (state.currentQuestion >= questions.length - 1) {
-        arrowToSet.addClass('not-active');
-      } else {
-        if (isAnswer) arrowToSet.removeClass('not-active');
-      }
-      // If the question is the first then set left arrow not-active
-    } else if (arrow === 'left') {
-      if (state.currentQuestion === 0) {
-        arrowToSet.addClass('not-active');
-      } else {
-        if (isAnswer) arrowToSet.removeClass('not-active');
-      }
-    }
-
-    // If right arrow pressed and left arrow is not active then set left arrow active. Opposite for right arrow
-    if (arrowToCheck.hasClass('not-active')) {
-      arrowToCheck.removeClass('not-active');
-    }
   }
 };

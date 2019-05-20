@@ -60,7 +60,8 @@
       background-color: black
       width: 100%
       z-index: -1
-      transform: translate(-50%)
+      transform: translate(-100%)
+      transition: .4s
     .progressbar-counter
       padding:
         left: 2px
@@ -153,6 +154,8 @@
         transform: rotate(30deg)
         top: 7px
         left: -3px
+      &.not-active
+        opacity: .35
   .right-arrow
     transform: rotateY(180deg)
 

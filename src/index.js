@@ -2,7 +2,7 @@
 // import jQuery from 'jquery';
 // window.$ = jQuery;
 // window.jQuery = jQuery;
-$(document).ready(function() {
+window.onload = function() {
   const overlay = $('.overlay');
   const toggleOverlayActive = function() {
     overlay.toggleClass('active');
@@ -48,4 +48,4 @@ $(document).ready(function() {
 
   console.log('main index.js');
 
-});
+};

@@ -38,18 +38,21 @@ module.exports = {
     test: [
       './src/sass/test/test.sass',
       PATHS.pages.test,
-    ]
+    ],
   },
   output: {
-    path: PATHS.dist,  // path to output directory
-    filename: `js/[name].js`,  // output js file. Name will correspond with entry props names (not values)
-    publicPath: '/',  // path to index.html for browsersync in dev-mode
+    path: PATHS.dist, // path to output directory
+    filename: 'js/[name].js', // output js file. Name will correspond with entry props names (not values)
+    publicPath: '/', // path to index.html for browsersync in dev-mode
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
+        options: {
+          presets: ['@babel/preset-env'],
+        },
         exclude: '/node_modules',
       },
       {
@@ -61,7 +64,7 @@ module.exports = {
             return relativePath;
           },
           name: '[name].[ext]',
-        }
+        },
       },
       {
         test: /\.(ttf|eot|woff)$/,
@@ -72,7 +75,7 @@ module.exports = {
             return relativePath;
           },
           name: '[name].[ext]',
-        }
+        },
       },
       {
         test: /\.(sass|scss)$/,
@@ -93,7 +96,7 @@ module.exports = {
             loader: 'sass-loader',
             options: { sourceMap: true },
           },
-        ]
+        ],
         // use: ['style-loader', 'css-loader'], // use it if you need css in header
       },
       {
@@ -107,12 +110,12 @@ module.exports = {
           },
           {
             loader: 'postcss-loader',
-            options: { sourceMap: true, config: { path: PATHS.src + '/config/postcss.config.js' } },
+            options: { sourceMap: true, config: { path: `${PATHS.src}/config/postcss.config.js` } },
           },
-        ]
+        ],
         // use: ['style-loader', 'css-loader'], // use it if you need css in header
       },
-    ]
+    ],
   },
   plugins: [
     // miniCss,
@@ -137,10 +140,10 @@ module.exports = {
       // { from: `${PATHS.src}/fonts`, to: 'fonts' },
     ]),
     new webpack.ProvidePlugin({
-      $: "jquery",
-      jQuery: "jquery",
+      $: 'jquery',
+      jQuery: 'jquery',
       'window.jQuery': 'jquery',
-    })
+    }),
   ],
 };
 

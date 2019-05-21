@@ -232,7 +232,6 @@ const state = {
     },
   },
   _questionRestoreInterval: undefined,
-  _rightBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
   _leftBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
   _rightBtnActive: false, // prevent from pressing an arrowBtn before it's ready to be pressed
 };
@@ -287,9 +286,15 @@ window.onload = function() {
     },
   };
 
+  // TODO: Remove this on prod
   window.answerBar = answerBar;
 
   answerBar.answerInputs.on('click', function(e) {
+    // If buttons is not active then don't allow user to choose answer because of setTimout in left and right arrow onClick function
+    if (!state._leftBtnActive && !state._rightBtnActive && state.currentQuestion !== 0) {
+      e.preventDefault();
+      return;
+    }
     // Set current answer in answerBar
     answerBar.setAnswer(e.target.value);
 
@@ -346,31 +351,34 @@ window.onload = function() {
 
   // Display previous question        
   arrowsContainer.leftArrow.on('click', function() {
-    if (state.currentQuestion !== 0 && state._leftBtnReady) {
+    if (state.currentQuestion !== 0 && state._leftBtnActive) {
       state._rightBtnActive = false;
-      state._leftBtnReady = false;
+      state._leftBtnActive = false;
       arrowsContainer.setArrowsNotActive(); // Set this to show a user that he can't press the buttons yet
 
+      // Set inline-css to move question container to display pervious question
       qEl.css({
         transition: '.4s',
         transform: 'translate(0%)',
       });
 
+      // Set current question's index to show
       state.currentQuestion -= 1;
 
       const answer = answerBar.getCurrentAnswer();
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
-
+        
         qEl.css({
           transition: '0s',
           transform: 'translate(-33.3333%)',
         });
 
+        // Move questions in question-html-elements
         switchQuestions(questionElements, state.currentQuestion);
         state._rightBtnActive = true;
-        state._leftBtnReady = true;
-        arrowsContainer.setArrowsState(state._leftBtnReady, arrowsContainer.rightArrowFigure);
+        state._leftBtnActive = true;
+        arrowsContainer.setArrowsState(state._leftBtnActive, arrowsContainer.rightArrowFigure);
       }, 400);
 
       progressBar.moveProgressBar('left');
@@ -381,28 +389,31 @@ window.onload = function() {
   arrowsContainer.rightArrow.on('click', function() {
     if (state.currentQuestion !== questions.length - 1 && state._rightBtnActive) {
       state._rightBtnActive = false;
-      state._leftBtnReady = false;
+      state._leftBtnActive = false;
       arrowsContainer.setArrowsNotActive(); // Set this to show a user that he can't press the buttons yet
 
+      // Set inline-css to move question container to display next question
       qEl.css({
         transition: '.4s',
         transform: 'translate(-66.6666%)',
       });
 
+      // Set current question's index to show
       state.currentQuestion += 1;
 
       const answer = answerBar.getCurrentAnswer();
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
-
+        
         qEl.css({
           transition: '0s',
           transform: 'translate(-33.3333%)',
         });
 
+        // Move questions in question-html-elements
         switchQuestions(questionElements, state.currentQuestion);
         state._rightBtnActive = answer ? true : false;
-        state._leftBtnReady = true;
+        state._leftBtnActive = true;
         arrowsContainer.setArrowsState(state._rightBtnActive, arrowsContainer.leftArrowFigure);
       }, 400);
 

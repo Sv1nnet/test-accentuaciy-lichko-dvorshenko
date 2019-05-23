@@ -263,9 +263,9 @@ window.onload = function() {
   const answerBar = {
     answerInputs: $('input[type=radio]'),
     currentAnswer: undefined,
-    getCurrentAnswer: function getCurrentAnswer() {
+    getCurrentAnswerAndSetInputChecked: function getCurrentAnswerAndSetInputChecked() {
       const answer = state.answers[state.currentQuestion];
-      // If anser exists then set related input checked and currentAnswer is state.answers[currentAnswer]
+      // If answer exists then set related input checked and currentAnswer is state.answers[currentAnswer]
       if (answer) {
         this.answerInputs.each((i, el) => {
           if (el.value === answer) {
@@ -286,38 +286,11 @@ window.onload = function() {
     },
   };
 
-  // TODO: Remove this on prod
-  window.answerBar = answerBar;
-
-  answerBar.answerInputs.on('click', function(e) {
-    // If buttons is not active then don't allow user to choose answer because of setTimout in left and right arrow onClick function
-    if (!state._leftBtnActive && !state._rightBtnActive && state.currentQuestion !== 0) {
-      e.preventDefault();
-      return;
-    }
-    // Set current answer in answerBar
-    answerBar.setAnswer(e.target.value);
-
-    // And set arrows active
-    state._rightBtnActive = true;
-    arrowsContainer.setArrowsState(state._rightBtnActive)
-  });
-
-  // TODO: Remove this on prod
-  window.progressBar = progressBar;
-
-  // Show and hide instructions
-  $('.instructions-container').on('click', 'h1', function() {
-    $('.instructions-container').toggleClass('active');
-  });
-
-  // Questions to display
-  const questions = state.questions.map((el, i) => ((i + 1) + '. ' + el));
-
   // Init contol and container elements
   const qEl = $('.questions'),
         questionElements = $('.question > p');
   
+  // Object to manage arrows state
   const arrowsContainer = {
     leftArrow: $('.left-arrow'),
     rightArrow: $('.right-arrow'),
@@ -346,6 +319,50 @@ window.onload = function() {
     }
   };
 
+  // CSS styles those we pass to $.css()
+  const cssStyles = {
+    displayLeftQuestion: {
+      transition: '.4s',
+      transform: 'translate(0%)',
+    },
+    displayRightQuestion: {
+      transition: '.4s',
+      transform: 'translate(-66.6666%)',
+    },
+    resetQuestionContainerPosition: {
+      transition: '0s',
+      transform: 'translate(-33.3333%)',
+    },
+  };
+
+  // Questions to display
+  const questions = state.questions.map((el, i) => ((i + 1) + '. ' + el));
+
+  // TODO: Remove this on prod
+  window.answerBar = answerBar;
+
+  answerBar.answerInputs.on('click', function(e) {
+    // If buttons is not active then don't allow user to choose answer because of setTimout in left and right arrow onClick function
+    if (!state._leftBtnActive && !state._rightBtnActive && state.currentQuestion !== 0) {
+      e.preventDefault();
+      return;
+    }
+    // Set current answer in answerBar
+    answerBar.setAnswer(e.target.value);
+
+    // And set arrows active
+    state._rightBtnActive = true;
+    arrowsContainer.setArrowsState(state._rightBtnActive)
+  });
+
+  // TODO: Remove this on prod
+  window.progressBar = progressBar;
+
+  // Show and hide instructions
+  $('.instructions-container').on('click', 'h1', function() {
+    $('.instructions-container').toggleClass('active');
+  });
+
   // TODO: Remove this on prod
   window.questionElements = questionElements;
 
@@ -354,25 +371,20 @@ window.onload = function() {
     if (state.currentQuestion !== 0 && state._leftBtnActive) {
       state._rightBtnActive = false;
       state._leftBtnActive = false;
-      arrowsContainer.setArrowsNotActive(); // Set this to show a user that he can't press the buttons yet
+      arrowsContainer.setArrowsNotActive(); // Set this to show to user that he can't press the buttons yet
 
       // Set inline-css to move question container to display pervious question
-      qEl.css({
-        transition: '.4s',
-        transform: 'translate(0%)',
-      });
+      qEl.css(cssStyles.displayLeftQuestion);
 
       // Set current question's index to show
       state.currentQuestion -= 1;
 
-      const answer = answerBar.getCurrentAnswer();
+      const answer = answerBar.getCurrentAnswerAndSetInputChecked();
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
         
-        qEl.css({
-          transition: '0s',
-          transform: 'translate(-33.3333%)',
-        });
+        // Set inline-css to reset questions container position
+        qEl.css(cssStyles.resetQuestionContainerPosition);
 
         // Move questions in question-html-elements
         switchQuestions(questionElements, state.currentQuestion);
@@ -390,25 +402,20 @@ window.onload = function() {
     if (state.currentQuestion !== questions.length - 1 && state._rightBtnActive) {
       state._rightBtnActive = false;
       state._leftBtnActive = false;
-      arrowsContainer.setArrowsNotActive(); // Set this to show a user that he can't press the buttons yet
+      arrowsContainer.setArrowsNotActive(); // Set this to show to user that he can't press the buttons yet
 
       // Set inline-css to move question container to display next question
-      qEl.css({
-        transition: '.4s',
-        transform: 'translate(-66.6666%)',
-      });
+      qEl.css(cssStyles.displayRightQuestion);
 
       // Set current question's index to show
       state.currentQuestion += 1;
 
-      const answer = answerBar.getCurrentAnswer();
+      const answer = answerBar.getCurrentAnswerAndSetInputChecked();
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
         
-        qEl.css({
-          transition: '0s',
-          transform: 'translate(-33.3333%)',
-        });
+        // Set inline-css to reset questions container position
+        qEl.css(cssStyles.resetQuestionContainerPosition);
 
         // Move questions in question-html-elements
         switchQuestions(questionElements, state.currentQuestion);

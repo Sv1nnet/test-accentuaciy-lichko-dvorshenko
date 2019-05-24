@@ -48,7 +48,7 @@ class DoubleLinkedList {
         emptyList: 'Failure: the list is empty',
       },
     };
-    const { currentNode } = this;
+    const currentNode = this._currentNode;
 
     // If the list is empty
     if (this._head === null) {
@@ -72,7 +72,7 @@ class DoubleLinkedList {
         emptyList: 'Failure: the list is empty',
       },
     };
-    const { currentNode } = this;
+    const currentNode = this._currentNode;
 
     // If list is empty
     if (this._head === null) {

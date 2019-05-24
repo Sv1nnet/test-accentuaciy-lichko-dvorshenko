@@ -1,5 +1,6 @@
 /* eslint-disable */
 import processResult from './processResult';
+import DoubleLinkedList from './doubleLinkedList';
 
 const rawData = {
   questions: [
@@ -399,8 +400,8 @@ const state = {
     'Я был как все дети и ничем не отличался от своих сверстников.',
     'Я люблю сытно поесть.',
   ],
-  answers: [],
-  zeroAnswers: [],
+  questionsList: new DoubleLinkedList(),
+  zeroAnswers: new DoubleLinkedList(),
   currentQuestion: 0,
   result: {
     accentuations: {
@@ -449,13 +450,12 @@ window.onload = function() {
   const progressBar = {
     progressLine: $('.progressbar-line'),
     progressCounter: $('.progressbar-counter #answered'),
-    moveProgressBar: function moveProgressBar(side) {
+    moveProgressBar: function moveProgressBar(side, currentQuestion) {
       const step = 100 / 194;
-      const currentQuestion = state.currentQuestion;
       const positionToSet = currentQuestion * step - 100;
 
       this.progressLine.css({ transform: 'translate(' + positionToSet + '%)' });
-      this._setCounter(currentQuestion + 1);
+      this._setCounter(currentQuestion);
     },
     _setCounter: function setCounter(currentQuestion) {
       this.progressCounter.text(currentQuestion);
@@ -466,9 +466,9 @@ window.onload = function() {
   const answerBar = {
     answerInputs: $('input[type=radio]'),
     currentAnswer: undefined,
-    getCurrentAnswerAndSetInputChecked: function getCurrentAnswerAndSetInputChecked() {
-      const answer = state.answers[state.currentQuestion];
-      // If answer exists then set related input checked and currentAnswer is state.answers[currentAnswer]
+    getCurrentAnswerAndSetInputChecked: function getCurrentAnswerAndSetInputChecked(current) {
+      const answer = current.data.answer;
+      // If answer exists then set related input checked and currentAnswer
       if (answer) {
         this.answerInputs.each((i, el) => {
           if (el.value === answer) {
@@ -483,9 +483,9 @@ window.onload = function() {
 
       return answer;
     },
-    setAnswer: function setAnswer(value) {
+    setAnswer: function setAnswer(currentQuestion, value) {
       this.currentAnswer = value;
-      state.answers[state.currentQuestion] = value;
+      currentQuestion.data.answer = value;
     },
   };
 
@@ -495,18 +495,25 @@ window.onload = function() {
 
   // Object to manage arrows state
   const arrowsContainer = {
-    leftArrow: $('.left-arrow'),
-    rightArrow: $('.right-arrow'),
+    leftArrow: {
+      element: $('.left-arrow'),
+      active: false,
+    },
+    rightArrow: {
+      element: $('.right-arrow'),
+      active: false,
+    },
     leftArrowFigure: $('.left-arrow .arrow'),
     rightArrowFigure: $('.right-arrow .arrow'),
     setArrowsState: function setArrowsState(isAnswer, arrowToCheck) {
-      if (state.currentQuestion >= questions.length - 1) {
+      const currentQuestion = state.questionsList.getCurrent();
+      if (currentQuestion.data.index >= questions.length) {
         this.rightArrowFigure.addClass('not-active');
       } else {
         if (isAnswer) this.rightArrowFigure.removeClass('not-active');
       }
 
-      if (state.currentQuestion === 0) {
+      if (currentQuestion.data.index === 1) {
         this.leftArrowFigure.addClass('not-active');
       } else {
         if (isAnswer) this.leftArrowFigure.removeClass('not-active');
@@ -518,12 +525,14 @@ window.onload = function() {
     },
     setArrowsNotActive: function setArrowsNotActive() {
       // Prevent arrowBtns from be pressed before they are ready
-      state._rightBtnActive = false;
-      state._leftBtnActive = false;
+      this.rightArrow.active = false;
+      this.leftArrow.active = false;
       this.rightArrowFigure.addClass('not-active');
       this.leftArrowFigure.addClass('not-active');
     }
   };
+
+  window.arrowsContainer = arrowsContainer;
 
   // CSS styles those we pass to $.css()
   const cssStyles = {
@@ -541,24 +550,34 @@ window.onload = function() {
     },
   };
 
+  state.questions.forEach((el, i) => {
+    state.questionsList.add({
+      question: i + 1 + '. ' + el,
+      index: i + 1,
+      answer: null,
+    });
+  })
+
   // Questions to display
-  const questions = state.questions.map((el, i) => ((i + 1) + '. ' + el));
+  const questions = state.questionsList;
+  questions.getFirst();
 
   // TODO: Remove this on prod
   window.answerBar = answerBar;
 
   answerBar.answerInputs.on('click', function(e) {
+    const currentQuestion = questions.getCurrent();
     // If buttons is not active then don't allow user to choose answer because of setTimout in left and right arrow onClick function
-    if (!state._leftBtnActive && !state._rightBtnActive && state.currentQuestion !== 0) {
+    if (!arrowsContainer.leftArrow.active && !arrowsContainer.rightArrow.active && currentQuestion.data.index !== 1) {
       e.preventDefault();
       return;
     }
     // Set current answer in answerBar
-    answerBar.setAnswer(e.target.value);
+    answerBar.setAnswer(currentQuestion, e.target.value);
 
     // And set arrows active
-    state._rightBtnActive = true;
-    arrowsContainer.setArrowsState(state._rightBtnActive)
+    arrowsContainer.rightArrow.active = true;
+    arrowsContainer.setArrowsState(arrowsContainer.rightArrow.active)
   });
 
   // TODO: Remove this on prod
@@ -573,19 +592,20 @@ window.onload = function() {
   window.questionElements = questionElements;
 
   // Display previous question        
-  arrowsContainer.leftArrow.on('click', function() {
-    if (state.currentQuestion !== 0 && state._leftBtnActive) {
-      const { currentQuestion } = state;
+  arrowsContainer.leftArrow.element.on('click', function() {
+    const currentQuestion = questions.getCurrent();
+    if (currentQuestion.data.index !== 1 && arrowsContainer.leftArrow.active) {
       // Set this to prevent arrowBtns from be pressed before they are ready and show to user that he can't press the buttons yet
       arrowsContainer.setArrowsNotActive();
 
       // Set inline-css to move question container to display pervious question
       qEl.css(cssStyles.displayLeftQuestion);
 
-      // Set current question's index to show
-      setCurrentQuestionIndex(currentQuestion - 1);
+      // Get previous question
+      const prevQuestion = questions.getPrev();
 
-      const answer = answerBar.getCurrentAnswerAndSetInputChecked();
+      // Get answer. If answer exists then we allow user to click nextBtn and get next question
+      const answer = answerBar.getCurrentAnswerAndSetInputChecked(prevQuestion);
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
 
@@ -593,46 +613,49 @@ window.onload = function() {
         qEl.css(cssStyles.resetQuestionContainerPosition);
 
         // Move questions in question-html-elements
-        switchQuestions(questionElements, questions, state.currentQuestion);
-        state._rightBtnActive = true;
-        state._leftBtnActive = true;
-        arrowsContainer.setArrowsState(state._leftBtnActive, arrowsContainer.rightArrowFigure);
+        switchQuestions(prevQuestion);
+        arrowsContainer.rightArrow.active = true;
+        arrowsContainer.leftArrow.active = true;
+        arrowsContainer.setArrowsState(answer, arrowsContainer.rightArrowFigure);
       }, 400);
 
-      progressBar.moveProgressBar('left');
+      progressBar.moveProgressBar('left', prevQuestion.data.index);
     }
   });
 
   // Display next question
-  arrowsContainer.rightArrow.on('click', function() {
-    if (state.currentQuestion !== questions.length - 1 && state._rightBtnActive) {
-      const { currentQuestion } = state;
+  arrowsContainer.rightArrow.element.on('click', function() {
+    const currentQuestion = questions.getCurrent();
+    const length = questions.getLength();
+    if (currentQuestion.data.index !== length && arrowsContainer.rightArrow.active) {
       // Set this to prevent arrowBtns from be pressed before they are ready and show to user that he can't press the buttons yet
       arrowsContainer.setArrowsNotActive();
 
       // Set inline-css to move question container to display next question
       qEl.css(cssStyles.displayRightQuestion);
 
-      // Set current question's index to show
-      setCurrentQuestionIndex(currentQuestion + 1);
+      // Get next question
+      const nextQuestion = questions.getNext();
 
-      const answer = answerBar.getCurrentAnswerAndSetInputChecked();
+      // Get answer. If answer exists then we allow user to click nextBtn and get next question
+      const answer = answerBar.getCurrentAnswerAndSetInputChecked(nextQuestion);
       // Return container to initial state and do this immediately - transition: 0s
       state._questionRestoreInterval = setTimeout(function() {
-
         // Set inline-css to reset questions container position
         qEl.css(cssStyles.resetQuestionContainerPosition);
 
         // Move questions in question-html-elements
-        switchQuestions(questionElements, questions, state.currentQuestion);
-        state._rightBtnActive = answer ? true : false;
-        state._leftBtnActive = true;
-        arrowsContainer.setArrowsState(state._rightBtnActive, arrowsContainer.leftArrowFigure);
+        switchQuestions(nextQuestion);
+        arrowsContainer.rightArrow.active = answer ? true : false;
+        arrowsContainer.leftArrow.active = true;
+        arrowsContainer.setArrowsState(answer, arrowsContainer.leftArrowFigure);
       }, 400);
 
-      progressBar.moveProgressBar('right');
-    } else {
-      // If question is the last then process results
+      progressBar.moveProgressBar('right', nextQuestion.data.index);
+    } 
+    
+    // If question is the last then process results
+    if (currentQuestion.data.index === length && arrowsContainer.rightArrow.active) {
 
     }
   });
@@ -643,9 +666,9 @@ window.onload = function() {
   }
 
   // Set questions in questionTextContainers
-  function switchQuestions(questionElements, questions, currentQuestion) {
-    $(questionElements[1]).text(questions[currentQuestion]);
-    $(questionElements[0]).text(questions[currentQuestion - 1]);
-    $(questionElements[2]).text(questions[currentQuestion + 1]);
+  function switchQuestions(question) {
+    $(questionElements[0]).text(question.prev && question.prev.data.question);
+    $(questionElements[1]).text(question.data.question);
+    $(questionElements[2]).text(question.next.data.question);
   }
 };

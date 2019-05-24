@@ -12,6 +12,7 @@ app/sass/components
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store

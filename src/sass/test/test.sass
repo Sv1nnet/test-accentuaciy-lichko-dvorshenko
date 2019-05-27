@@ -158,6 +158,14 @@
         opacity: .35
   .right-arrow
     transform: rotateY(180deg)
+    span.results
+      display: none
+    &.show-results
+      transform: rotateY(0deg)
+      .arrow
+        display: none
+      span.results
+        display: inline-block
 
 .answer-explanations
   border: black 1px solid

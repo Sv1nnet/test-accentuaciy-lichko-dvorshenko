@@ -7,7 +7,7 @@ const progressBar = {
   moveProgressBar: null,
   resetProgressBar: null,
   _setCounter: null,
-  _counter: 0,
+  counter: 0,
   init: function init(state) {
     this.progressLine = $('.progressbar-line');
     this.progressCounter = $('.progressbar-counter #answered');
@@ -31,17 +31,17 @@ const progressBar = {
       }
       this._setCounter(count);
 
-      const positionToSet = this._counter * step - 100;
+      const positionToSet = this.counter * step - 100;
       this.progressLine.css({ transform: `translate(${positionToSet}%)` });
     };
 
     this._setCounter = function setCounter(count) {
-      this._counter += count;
-      this.progressCounter.text(this._counter);
+      this.counter += count;
+      this.progressCounter.text(this.counter);
     };
 
     this.resetProgressBar = function resetProgressBar(total) {
-      this._counter = 0;
+      this.counter = 0;
       this.totalQuestions = total;
       this.progressTotalQuestions.text(total);
       this.moveProgressBar('right');

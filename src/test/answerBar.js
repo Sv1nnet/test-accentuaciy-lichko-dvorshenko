@@ -34,9 +34,7 @@ const answerBar = {
     };
 
     this.setAnswerInputEventHandler = function setAnswerInputEventHandler(questions) {
-      console.log('set', questions);
       this.answerInputEventHandler = function answerInputEventHandler(e) {
-        console.log('event', questions);
         const currentQuestion = questions.getCurrent();
         // If buttons is not active then don't allow user to choose answer because of setTimout in left and right arrow onClick function
         if (!arrowsContainer.leftArrow.active && !arrowsContainer.rightArrow.active && currentQuestion.data.index !== 1) {

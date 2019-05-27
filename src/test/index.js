@@ -204,7 +204,8 @@ const state = {
     // 'Я люблю сытно поесть.',
   ],
   questionsList: new DoubleLinkedList(),
-  zeroAnswersList: new DoubleLinkedList(),
+  zeroAnswersList: undefined,
+  extremeAnswersList: undefined,
   zeroAnswersHandled: false,
   result: {
     accentuations: {
@@ -224,12 +225,35 @@ const state = {
       accentuation: undefined,
       conformity: undefined,
       negativeAttitude: undefined,
-      dissimulation: undefined,
-      heightenedFrankness: undefined,
-      emancipation: undefined,
-      delinquency: undefined,
-      genderRole: undefined,
-      addictionToAlcoholism: undefined,
+      dissimulation: {
+        value: 0,
+        availability: false,
+      },
+      heightenedFrankness: {
+        value: 0,
+        availability: false,
+      },
+      organicNature: {
+        value: 0,
+        availability: false,
+      },
+      emancipation: {
+        value: 0,
+        availability: false,
+      },
+      delinquency: {
+        value: 0,
+        availability: false,
+      },
+      genderRole: {
+        m: 0,
+        f: 0,
+        result: undefined,
+      },
+      addictionToAlcoholism: {
+        value: 0,
+        availability: false,
+      },
       socialDisadaptationRisk: undefined,
       probabilityOfPsychopathy: undefined,
       tendencyOfDepression: undefined,
@@ -277,8 +301,8 @@ window.onload = function() {
   })
 
   // Questions to display
-  const questions = state.questionsList;
-  questions.getFirst(); // Move to first item in a list
+  const questionsList = state.questionsList;
+  questionsList.getFirst(); // Move to first item in a list
 
   // Init progressbar fields set initial progressbar position
   progressBar.init(state);
@@ -289,7 +313,7 @@ window.onload = function() {
   // Answer object
   answerBar.init(arrowsContainer)
 
-  answerBar.setAnswerInputEventHandler(questions);
+  answerBar.setAnswerInputEventHandler(questionsList);
   // Init answer inputs event
   answerBar.answerInputs.on('click', function(e) {
     answerBar.answerInputEventHandler(e);
@@ -313,14 +337,14 @@ window.onload = function() {
   window.questionElements = questionElements;
 
   // Set left arrow event handler with questions list
-  arrowsContainer.setLeftArrowEventHanler(questions, progressBar, answerBar);
+  arrowsContainer.setLeftArrowEventHanler(questionsList, progressBar, answerBar);
   // Display previous question        
   arrowsContainer.leftArrow.element.on('click', function() {
     arrowsContainer.leftArrowEventHanler();
   });
 
   // Set right arrow event handler with questions list
-  arrowsContainer.setRightArrowEventHanler(questions, progressBar, answerBar);
+  arrowsContainer.setRightArrowEventHanler(questionsList, progressBar, answerBar);
   // Display next question
   arrowsContainer.rightArrow.element.on('click', function() {
     arrowsContainer.rightArrowEventHanler();

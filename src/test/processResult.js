@@ -1,12 +1,16 @@
+/* eslint-disable quote-props */
+import DoubleLinkedList from './doubleLinkedList';
+import portableCode from './portableCode';
+
 /* eslint-disable no-use-before-define */
 
 /*
  * Процесс обработки результатов:
  * 1. Подсчитать кол-во нулевых ответов. Если их >= 7, то предложить уменьшить их кол-во;
- * 2. Выделить все ответы ответы раыные "3" и "-3";
+ * 2. Выделить все ответы ответы раыные '3' и '-3';
  * 3. Построить график при помощи портативного кода (за каждый ответ начислить определенное кол-во балов соответстующим шкалам акцентуаций);
  * 4. Начислить дополнительные баллы за показатели по графику;
- * 5. Если после всех процедур ни одна шкала акцентуаций не привысила границу (5 баллов), то повторить пункты 2 и 3 для всех ответов со значением "2" и "-2";
+ * 5. Если после всех процедур ни одна шкала акцентуаций не привысила границу (5 баллов), то повторить пункты 2 и 3 для всех ответов со значением '2' и '-2';
  *
  * Правила работы с графиком:
  * 1. Тип считается не определенным, если по графику не набрано минимальное диагностическое число (МДЧ) баллов ни для одного из типов. Акцентуации считается выраженной, если ее значение превышает 5 баллов, т. е. составляет 6 баллов и выше.
@@ -192,11 +196,15 @@
  */
 
 function processResults(state) {
+  console.log('prcessing results');
+  mergeQuestions(state);
+  countExtremeAnswers(state, 3);
 }
 
-// Step
+// Step 1
 function getZeroAnswers(state) {
-  const { questionsList, zeroAnswersList } = state;
+  const { questionsList } = state;
+  const zeroAnswersList = new DoubleLinkedList();
   const length = questionsList.getLength();
 
   let count = 1;
@@ -214,8 +222,76 @@ function getZeroAnswers(state) {
   return zeroAnswersList;
 }
 
+// Merge answer from zeroAnswersList to questionList
+function mergeQuestions(state) {
+  console.log('merging');
+  const length = state.questionsList.getLength();
+
+  let count = 0;
+  let currentQuestion = state.questionsList.getFirst();
+  let currentZeroQuestion = state.zeroAnswersList.getFirst();
+
+  while (count <= length) {
+    if (currentQuestion.data.index === currentZeroQuestion.data.index) {
+      currentQuestion.data.answer = currentZeroQuestion.data.answer;
+      currentZeroQuestion = currentZeroQuestion.next !== null ? state.zeroAnswersList.getNext() : currentZeroQuestion;
+    }
+
+    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
+    count += 1;
+  }
+  console.log('merged');
+}
+
+// Step 2
+function countExtremeAnswers(state, assessment) {
+  console.log('extreme started');
+  const length = state.questionsList.getLength();
+  const extremeAnswersList = new DoubleLinkedList();
+
+  let currentQuestion = state.questionsList.getFirst();
+  let count = 0;
+  let pos = '';
+  let neg = '';
+  if (assessment === 3) {
+    pos = '3';
+    neg = '-3';
+  }
+  if (assessment === 2) {
+    pos = '2';
+    neg = '-2';
+  }
+
+  while (count <= length) {
+    if (currentQuestion.data.answer === pos || currentQuestion.data.answer === neg) {
+      extremeAnswersList.add({ index: currentQuestion.data.index, answer: currentQuestion.data.answer })
+    }
+
+    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
+    count += 1;
+  }
+  console.log('extreme finished', extremeAnswersList);
+  state.extremeAnswersList = extremeAnswersList;
+}
+
+// Step 3
+function createChart(state) {
+  const { extremeAnswersList } = state;
+  const length = extremeAnswersList.getLength();
+
+  let count = 0;
+  let currentQuestion = extremeAnswersList.getFirst();
+
+  while (count <= length) {
+    // switch (currentQuestion.data.index)
+    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
+    count += 1;
+  }
+}
+
 const results = {
   getZeroAnswers,
+  processResults,
 };
 
 export default results;

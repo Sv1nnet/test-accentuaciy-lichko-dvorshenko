@@ -30,8 +30,10 @@ const arrowsContainer = {
       const currentQuestion = questionsList.getCurrent();
       if (!currentQuestion.next) {
         this.rightArrowFigure.addClass('not-active');
+        if (isAnswer) this.rightArrow.element.addClass('show-results');
       } else if (isAnswer) {
         this.rightArrowFigure.removeClass('not-active');
+        this.rightArrow.element.removeClass('show-results');
       }
 
       if (!currentQuestion.prev) {
@@ -51,6 +53,7 @@ const arrowsContainer = {
       this.leftArrow.active = false;
       this.rightArrowFigure.addClass('not-active');
       this.leftArrowFigure.addClass('not-active');
+      this.rightArrow.element.removeClass('show-results');
     };
 
     this.setLeftArrowEventHanler = function setLeftArrowEventHanler(questions, progressBar, answerBar) {
@@ -117,19 +120,31 @@ const arrowsContainer = {
         }
 
         // If question is the last in zeroAnsweredList then process results from step 2
-        if (state.zeroAnswersList.getLength() !== 0) {
-          if (currentQuestion.data.index === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
+        console.log('state.zeroAnswersList', state.zeroAnswersList);
+        console.log('currentQuestion.data.index === length', currentQuestion.data.index === length);
+        console.log('arrowsContainer.rightArrow.active', arrowsContainer.rightArrow.active);
+        console.log('state.zeroAnswersHandled', state.zeroAnswersHandled);
+
+        if (state.zeroAnswersList) {
+          if (progressBar.counter === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
             state.zeroAnswersHandled = true;
+            // processing results
+            results.processResults(state);
           }
         }
 
+        // Step 1
         // If question is the last then process results
-        if (currentQuestion.data.index === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
+        if (progressBar.counter === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
           state.zeroAnswersList = results.getZeroAnswers(state);
           const currentZeroQuestion = state.zeroAnswersList.getFirst();
+          console.log('getting zero answers');
 
           // Step 1
-          if (state.zeroAnswersList.getLength() >= 7) {
+          if (state.zeroAnswersList && state.zeroAnswersList.getLength() >= 7) {
+            alert('Вам будут представлены вопросы, на которые вы ответили "Примерно одинакого - 0". Попробуй уменьшить их количетво, выбрав другой вариант ответа, если это возможно. Если вы считаете, что подходит только ответ "Примерно одинакого - 0", то оставьте его как есть.');
+
+            this.setArrowsState(currentZeroQuestion.data.answer, this.leftArrowFigure, state.zeroAnswersList);
             // Set arrow handlers with a new questions list (that containes answers equale zero)
             this.setRightArrowEventHanler(state.zeroAnswersList, progressBar, answerBar);
             this.setLeftArrowEventHanler(state.zeroAnswersList, progressBar, answerBar);

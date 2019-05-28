@@ -1,715 +1,799 @@
 const portableCode = {
-  calc(result, answer) {
+  calcAnswers(result, answer) { // Each while loop we invoke this method and pass state.result and state.extremeAnswersList.getCurrent() into this one
     const { code } = this;
     const { accentuations, extraInfo } = result;
-    const answerValue = parseInt(answer.value, 0); // Get assessment in Int
+    const answerValue = parseInt(answer.answer, 0); // Get assessment in Int
     const answerResult = code[answer.index]; // Get answer object with results
     const codes = answerValue > 0 ? answerResult.pos : answerResult.neg;
     if (codes) {
       codes.forEach((el) => {
+        console.log(el);
         switch (el) {
-          case 'Г':
+          case 'hyperthymic':
             accentuations.hyperthymic += 1;
             break;
-          case 'Ц':
+          case 'cycloid':
             accentuations.cycloid += 1;
             break;
-          case 'Л':
+          case 'labile':
             accentuations.labile += 1;
             break;
-          case 'А':
+          case 'asthenic':
             accentuations.asthenic += 1;
             break;
-          case 'С':
+          case 'sensitive':
             accentuations.sensitive += 1;
             break;
-          case 'П':
+          case 'psychasthenic':
             accentuations.psychasthenic += 1;
             break;
-          case 'Ш':
+          case 'schizoid':
             accentuations.schizoid += 1;
             break;
-          case 'Э':
+          case 'epileptoid':
             accentuations.epileptoid += 1;
             break;
-          case 'И':
+          case 'hysterical':
             accentuations.hysterical += 1;
             break;
-          case 'Н':
+          case 'unstable':
             accentuations.unstable += 1;
             break;
-          case 'К':
+          case 'conformal':
             accentuations.conformal += 1;
             break;
-          case 'Д':
+          case 'dissimulation':
             extraInfo.dissimulation.value += 1;
             break;
-          case 'Т':
+          case 'heightenedFrankness':
             extraInfo.heightenedFrankness.value += 1;
             break;
-          case 'В':
+          case 'organicNature':
             extraInfo.organicNature.value += 1;
             break;
-          case 'Е':
+          case 'emancipation':
             extraInfo.emancipation.value += 1;
             break;
-          case 'd':
+          case 'delinquency':
             extraInfo.delinquency.value += 1;
             break;
-          case 'М':
+          case 'genderRoleM':
             extraInfo.genderRole.m += 1;
             break;
-          case 'Ф':
+          case 'genderRoleF':
             extraInfo.genderRole.f += 1;
-            break;
-          case typeof el === 'number':
-            extraInfo.addictionToAlcoholism.value += el;
             break;
 
           default:
+            if (typeof el === 'number') extraInfo.addictionToAlcoholism.value += el;
             break;
         }
       });
     }
   },
+  addExtraPoints(result) {
+    const { accentuations, extraInfo } = result;
+    // Here is strict order to follow that can't be optimized via forin, forof, while etc.
+    if (accentuations.hyperthymic <= 1) {
+      accentuations.psychasthenic += 1;
+      accentuations.sensitive += 1;
+    }
+
+    if (accentuations.hyperthymic >= 6) {
+      accentuations.hyperthymic += 1;
+    }
+
+    if (accentuations.cycloid >= 6) {
+      accentuations.labile += 1;
+    }
+
+    if (accentuations.asthenic >= 4) {
+      accentuations.asthenic += 1;
+      accentuations.labile += 1;
+    }
+
+    if (accentuations.psychasthenic <= 1) {
+      accentuations.unstable += 1;
+    }
+
+    if (accentuations.unstable <= 1) {
+      accentuations.psychasthenic += 1;
+    }
+
+    if (accentuations.conformal === 0) {
+      accentuations.schizoid += 1;
+      accentuations.schizoid += 1;
+      accentuations.hysterical += 1;
+    }
+
+    if (accentuations.conformal === 1) {
+      accentuations.schizoid += 1;
+    }
+
+    if (extraInfo.dissimulation >= 6) {
+      accentuations.unstable += 1;
+    }
+
+    if (extraInfo.heightenedFrankness > extraInfo.dissimulation) {
+      accentuations.psychasthenic += 1;
+      accentuations.psychasthenic += 1;
+      accentuations.cycloid += 1;
+    }
+
+    if (extraInfo.organicNature === 5) {
+      accentuations.epileptoid += 1;
+    }
+
+    if (extraInfo.organicNature >= 6) {
+      accentuations.epileptoid += 1;
+      accentuations.epileptoid += 1;
+    }
+
+    if (extraInfo.emancipation >= 6) {
+      accentuations.schizoid += 1;
+      accentuations.hysterical += 1;
+    }
+
+    if (extraInfo.delinquency >= 5) {
+      accentuations.schizoid += 1;
+    }
+
+    if (extraInfo.negativeAttitude.value >= 6) {
+      accentuations.sensitive += 1;
+    }
+
+    if (extraInfo.gender === 'male' && extraInfo.genderRole.m < extraInfo.genderRole.f) {
+      accentuations.sensitive += 1;
+      accentuations.schizoid += 1;
+      accentuations.hysterical += 1;
+    }
+
+    if (extraInfo.addictionToAlcoholism <= -6) {
+      accentuations.sensitive += 1;
+    }
+
+    if (extraInfo.addictionToAlcoholism >= 6) {
+      accentuations.hysterical += 1;
+    }
+  },
   code: {
     1: {
-      pos: ['A'],
+      pos: ['asthenic'],
     },
     2: {
-      pos: ['T'],
+      pos: ['heightenedFrankness'],
     },
     3: {
-      pos: ['С', 'П', 'Ш', -3],
+      pos: ['sensitive', 'psychasthenic', 'schizoid', -3],
       neg: [1],
     },
     4: {
-      pos: ['П', 'П'],
+      pos: ['psychasthenic', 'psychasthenic'],
     },
     5: {
-      pos: ['С', 'Ш', 'Ш'],
+      pos: ['sensitive', 'schizoid', 'schizoid'],
     },
     6: {
-      pos: ['П'],
-      neg: ['Ц'],
+      pos: ['psychasthenic'],
+      neg: ['cycloid'],
     },
     7: {
-      pos: ['Д', 'Е'],
+      pos: ['dissimulation', 'emancipation'],
     },
     8: {
-      pos: ['И'],
+      pos: ['hysterical'],
     },
     9: {
-      pos: ['Д', 'Н', 'Н'],
+      pos: ['dissimulation', 'unstable', 'unstable'],
     },
     10: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     11: {
-      neg: ['Н', 'Н'],
+      neg: ['unstable', 'unstable'],
     },
     12: {
-      pos: ['К'],
+      pos: ['conformal'],
     },
     13: {
-      pos: ['Л'],
+      pos: ['labile'],
     },
     14: {
-      pos: ['В'],
+      pos: ['organicNature'],
     },
     15: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     16: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     17: {
-      pos: ['Л', 'С'],
-      neg: ['d'],
+      pos: ['labile', 'sensitive'],
+      neg: ['delinquency'],
     },
     18: {
-      pos: ['Т', 'С'],
+      pos: ['heightenedFrankness', 'sensitive'],
     },
     19: {
-      pos: ['Л', 'И'],
+      pos: ['labile', 'hysterical'],
     },
     20: {
-      pos: ['А'],
+      pos: ['asthenic'],
     },
     21: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     22: {
-      pos: ['П', 'П'],
+      pos: ['psychasthenic', 'psychasthenic'],
     },
     23: {
-      pos: ['Е'],
-      neg: ['Л'],
+      pos: ['emancipation'],
+      neg: ['labile'],
     },
     24: {
-      pos: ['А'],
+      pos: ['asthenic'],
     },
     25: {
-      neg: ['Ц'],
+      neg: ['cycloid'],
     },
     26: {
-      pos: ['М', 1],
+      pos: ['genderRoleM', 1],
     },
     27: {
-      pos: ['Ц'],
-      neg: ['Д', 'Э', 'И'],
+      pos: ['cycloid'],
+      neg: ['dissimulation', 'epileptoid', 'hysterical'],
     },
     28: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     29: {
-      pos: ['П', 'Ш', 'Ш', 'Э'],
+      pos: ['psychasthenic', 'schizoid', 'schizoid', 'epileptoid'],
     },
     30: {
-      pos: ['Т'],
+      pos: ['heightenedFrankness'],
     },
     31: {
-      pos: ['Г'],
+      pos: ['hyperthymic'],
     },
     32: {
-      pos: ['С'],
-      neg: ['М'],
+      pos: ['sensitive'],
+      neg: ['genderRoleM'],
     },
     33: {
 
-      neg: ['К'],
+      neg: ['conformal'],
     },
     34: {
-      pos: ['П'],
+      pos: ['psychasthenic'],
     },
     35: {
-      pos: ['Е', 'Ф', 'Ф'],
+      pos: ['emancipation', 'genderRoleF', 'genderRoleF'],
     },
     36: {
-      pos: ['Н'],
-      neg: ['Ш', 'Ш'],
+      pos: ['unstable'],
+      neg: ['schizoid', 'schizoid'],
     },
     37: {
-      pos: ['Э', 'Э'],
-      neg: ['Л'],
+      pos: ['epileptoid', 'epileptoid'],
+      neg: ['labile'],
     },
     38: {
-      pos: ['Э', 'Э'],
+      pos: ['epileptoid', 'epileptoid'],
     },
     39: {
-      neg: ['Л'],
+      neg: ['labile'],
     },
     40: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     41: {
-      pos: ['Н', 'Н'],
+      pos: ['unstable', 'unstable'],
     },
     42: {
-      neg: ['Ц'],
+      neg: ['cycloid'],
     },
     43: {
-      pos: ['Г', 'Ц'],
-      neg: ['d'],
+      pos: ['hyperthymic', 'cycloid'],
+      neg: ['delinquency'],
     },
     44: {
-      pos: ['Ш'],
+      pos: ['schizoid'],
     },
     45: {
-      neg: ['Э', 'Э'],
+      neg: ['epileptoid', 'epileptoid'],
     },
     46: {
-      pos: ['И', 'И', 'Е', 'Ф', 'Ф'],
+      pos: ['hysterical', 'hysterical', 'emancipation', 'genderRoleF', 'genderRoleF'],
     },
     47: {
-      pos: ['Ф'],
+      pos: ['genderRoleF'],
     },
     48: {
-      pos: ['Ш'],
+      pos: ['schizoid'],
     },
     49: {
-      pos: ['Л', 'Л', 'П'],
+      pos: ['labile', 'labile', 'psychasthenic'],
     },
     50: {
-      pos: ['Т', 'Т', 'Т'],
-      neg: ['Г', 'Л'],
+      pos: ['heightenedFrankness', 'heightenedFrankness', 'heightenedFrankness'],
+      neg: ['hyperthymic', 'labile'],
     },
     51: {
-      pos: ['Л'],
+      pos: ['labile'],
     },
     52: {
-      pos: ['П'],
+      pos: ['psychasthenic'],
     },
     53: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     54: {
-      pos: ['d'],
-      neg: ['Г'],
+      pos: ['delinquency'],
+      neg: ['hyperthymic'],
     },
     55: {
-      pos: ['Т', 'Т'],
+      pos: ['heightenedFrankness', 'heightenedFrankness'],
     },
     56: {
-      pos: ['А', 'd'],
-      neg: ['В'],
+      pos: ['asthenic', 'delinquency'],
+      neg: ['organicNature'],
     },
     57: {
       pos: [2],
-      neg: ['Ц'],
+      neg: ['cycloid'],
     },
     58: {
-      neg: ['М'],
+      neg: ['genderRoleM'],
     },
     59: {
-      neg: ['П'],
+      neg: ['psychasthenic'],
     },
     60: {
-      pos: ['Л', 'Э'],
+      pos: ['labile', 'epileptoid'],
     },
     61: {
-      pos: ['Н', 'd', 'Е'],
+      pos: ['unstable', 'delinquency', 'emancipation'],
     },
     62: {
-      pos: ['Л', 'Ф'],
+      pos: ['labile', 'genderRoleF'],
     },
     63: {
-      pos: ['Ш', 'И'],
+      pos: ['schizoid', 'hysterical'],
     },
     64: {
-      pos: ['Э'],
-      neg: ['Л'],
+      pos: ['epileptoid'],
+      neg: ['labile'],
     },
     65: {
       pos: [1],
-      neg: ['Ф'],
+      neg: ['genderRoleF'],
     },
     66: {
-      pos: ['Е'],
-      neg: ['К'],
+      pos: ['emancipation'],
+      neg: ['conformal'],
     },
     67: {
-      pos: ['С', 'С'],
+      pos: ['sensitive', 'sensitive'],
     },
     68: {
-      pos: ['Э', 'Э', 'd'],
+      pos: ['epileptoid', 'epileptoid', 'delinquency'],
     },
     69: {
-      pos: ['Ц', 'П', 'М'],
+      pos: ['cycloid', 'psychasthenic', 'genderRoleM'],
     },
     70: {
-      neg: ['И', 'И'],
+      neg: ['hysterical', 'hysterical'],
     },
     71: {
-      pos: ['А', 'А'],
+      pos: ['asthenic', 'asthenic'],
     },
     72: {
-      pos: ['А'],
+      pos: ['asthenic'],
     },
     73: {
-      pos: ['Д', 'Н', 'Н'],
-      neg: ['М'],
+      pos: ['dissimulation', 'unstable', 'unstable'],
+      neg: ['genderRoleM'],
     },
     74: {
-      pos: ['Э', 'd'],
+      pos: ['epileptoid', 'delinquency'],
     },
     75: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     76: {
-      pos: ['С', 'М'],
+      pos: ['sensitive', 'genderRoleM'],
     },
     77: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     78: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     79: {
-      pos: ['Ц', 'А'],
+      pos: ['cycloid', 'asthenic'],
     },
     80: {
-      pos: ['А'],
-      neg: ['Ц', 'Э', 'М'],
+      pos: ['asthenic'],
+      neg: ['cycloid', 'epileptoid', 'genderRoleM'],
     },
     81: {
-      neg: ['Л', 'С'],
+      neg: ['labile', 'sensitive'],
     },
     82: {
-      neg: ['Д'],
+      neg: ['dissimulation'],
     },
     83: {
-      pos: ['Э'],
+      pos: ['epileptoid'],
     },
     84: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     85: {
-      pos: ['Г', 'Г', 'Е'],
-      neg: ['С'],
+      pos: ['hyperthymic', 'hyperthymic', 'emancipation'],
+      neg: ['sensitive'],
     },
     86: {
-      pos: ['М'],
-      neg: ['Г'],
+      pos: ['genderRoleM'],
+      neg: ['hyperthymic'],
     },
     87: {
-      pos: ['К'],
+      pos: ['conformal'],
     },
     88: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     89: {
-      pos: ['Ц', 'А', 'Ф'],
+      pos: ['cycloid', 'asthenic', 'genderRoleF'],
     },
     90: {
-      pos: ['В', 'd'],
-      neg: ['С'],
+      pos: ['organicNature', 'delinquency'],
+      neg: ['sensitive'],
     },
     91: {
-      pos: ['А', 'П'],
-      neg: ['Г'],
+      pos: ['asthenic', 'psychasthenic'],
+      neg: ['hyperthymic'],
     },
     92: {
-      pos: ['Е'],
-      neg: ['Л'],
+      pos: ['emancipation'],
+      neg: ['labile'],
     },
     93: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     94: {
-      pos: ['d'],
+      pos: ['delinquency'],
     },
     95: {
-      neg: ['А'],
+      neg: ['asthenic'],
     },
     96: {
-      pos: ['С', -3],
-      neg: ['Ц', 'Л', 2],
+      pos: ['sensitive', -3],
+      neg: ['cycloid', 'labile', 2],
     },
     97: {
-      pos: ['В', 'М'],
+      pos: ['organicNature', 'genderRoleM'],
     },
     98: {
-      pos: ['Г', 'Ц'],
-      neg: ['С'],
+      pos: ['hyperthymic', 'cycloid'],
+      neg: ['sensitive'],
     },
     99: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     100: {
-      pos: ['Е'],
-      neg: ['И'],
+      pos: ['emancipation'],
+      neg: ['hysterical'],
     },
     101: {
-      pos: ['Л'],
+      pos: ['labile'],
     },
     102: {
-      pos: ['П'],
+      pos: ['psychasthenic'],
     },
     103: {
-      neg: ['Л', 'М'],
+      neg: ['labile', 'genderRoleM'],
     },
     104: {
-      pos: ['А'],
-      neg: ['Л'],
+      pos: ['asthenic'],
+      neg: ['labile'],
     },
     105: {
-      pos: ['Ш', 'Е'],
+      pos: ['schizoid', 'emancipation'],
     },
     106: {
-      neg: ['Э', 'И', 'В'],
+      neg: ['epileptoid', 'hysterical', 'organicNature'],
     },
     107: {
-      pos: ['С'],
+      pos: ['sensitive'],
     },
     108: {
-      pos: ['Е'],
+      pos: ['emancipation'],
     },
     109: {
-      pos: ['Э'],
-      neg: ['Э', 'Э', 'Н'],
+      pos: ['epileptoid'],
+      neg: ['epileptoid', 'epileptoid', 'unstable'],
     },
     110: {
-      pos: ['П'],
-      neg: ['Г'],
+      pos: ['psychasthenic'],
+      neg: ['hyperthymic'],
     },
     111: {
-      pos: ['Т'],
+      pos: ['heightenedFrankness'],
     },
     112: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     113: {
-      pos: ['С', 'С'],
+      pos: ['sensitive', 'sensitive'],
     },
     114: {
-      pos: ['П'],
+      pos: ['psychasthenic'],
     },
     115: {
-      neg: ['Л', 'Н'],
+      neg: ['labile', 'unstable'],
     },
     116: {
-      pos: ['Е'],
-      neg: ['К'],
+      pos: ['emancipation'],
+      neg: ['conformal'],
     },
     117: {
-      pos: ['Ц'],
-      neg: ['d'],
+      pos: ['cycloid'],
+      neg: ['delinquency'],
     },
     118: {
-      neg: ['Э'],
+      neg: ['epileptoid'],
     },
     119: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     120: {
-      pos: ['А', 'С'],
+      pos: ['asthenic', 'sensitive'],
     },
     121: {
-      pos: ['Г'],
-      neg: ['С'],
+      pos: ['hyperthymic'],
+      neg: ['sensitive'],
     },
     122: {
-      neg: ['Д', 'И'],
+      neg: ['dissimulation', 'hysterical'],
     },
     123: {
-      pos: ['Ш', 'Ш', 'Е'],
-      neg: ['К'],
+      pos: ['schizoid', 'schizoid', 'emancipation'],
+      neg: ['conformal'],
     },
     124: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     125: {
-      neg: ['М'],
+      neg: ['genderRoleM'],
     },
     126: {
-      pos: ['Л', 'А'],
+      pos: ['labile', 'asthenic'],
     },
     127: {
       pos: [-1],
       neg: [1],
     },
     128: {
-      pos: ['П'],
+      pos: ['psychasthenic'],
     },
     129: {
-      pos: ['Ц'],
-      neg: ['Г'],
+      pos: ['cycloid'],
+      neg: ['hyperthymic'],
     },
     130: {
-      pos: ['Э'],
-      neg: ['В'],
+      pos: ['epileptoid'],
+      neg: ['organicNature'],
     },
     131: {
-      pos: ['Ц'],
-      neg: ['d'],
+      pos: ['cycloid'],
+      neg: ['delinquency'],
     },
     132: {
-      pos: ['С', 'С'],
+      pos: ['sensitive', 'sensitive'],
     },
     133: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     134: {
-      pos: ['Ф'],
+      pos: ['genderRoleF'],
     },
     135: {
-      pos: ['Ц', 'd'],
+      pos: ['cycloid', 'delinquency'],
     },
     136: {
-      pos: ['Е'],
-      neg: ['Г', 'Л', 'П', 'Э'],
+      pos: ['emancipation'],
+      neg: ['hyperthymic', 'labile', 'psychasthenic', 'epileptoid'],
     },
     137: {
-      pos: ['Л', 'А'],
+      pos: ['labile', 'asthenic'],
     },
     138: {
-      pos: ['Г'],
-      neg: ['С', 'С'],
+      pos: ['hyperthymic'],
+      neg: ['sensitive', 'sensitive'],
     },
     139: {
-      pos: ['Ц', 'Л'],
+      pos: ['cycloid', 'labile'],
     },
     140: {
-      pos: ['Г', 'Э', 'И', 'Н', 'Н'],
+      pos: ['hyperthymic', 'epileptoid', 'hysterical', 'unstable', 'unstable'],
     },
     141: {
-      pos: ['Г', 'Н'],
+      pos: ['hyperthymic', 'unstable'],
     },
     142: {
-      pos: ['Ш'],
+      pos: ['schizoid'],
     },
     143: {
-      neg: ['И', 'И'],
+      neg: ['hysterical', 'hysterical'],
     },
     144: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     145: {
-      pos: ['Г'],
+      pos: ['hyperthymic'],
     },
     146: {
-      pos: ['Г'],
+      pos: ['hyperthymic'],
     },
     147: {
-      pos: ['Е', 'Ф', 'Ф'],
+      pos: ['emancipation', 'genderRoleF', 'genderRoleF'],
     },
     148: {
-      neg: ['Ш', 'Ш', 'd', 'd'],
+      neg: ['schizoid', 'schizoid', 'delinquency', 'delinquency'],
     },
     149: {
-      pos: ['Г', 'Н', 'М', 'М'],
+      pos: ['hyperthymic', 'unstable', 'genderRoleM', 'genderRoleM'],
     },
     150: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     151: {
-      pos: ['И', 'И'],
-      neg: ['К'],
+      pos: ['hysterical', 'hysterical'],
+      neg: ['conformal'],
     },
     152: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     153: {
-      neg: ['Э'],
+      neg: ['epileptoid'],
     },
     154: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     155: {
-      neg: ['d', 'd', 'd'],
+      neg: ['delinquency', 'delinquency', 'delinquency'],
     },
     156: {
-      pos: ['Э', 'И'],
-      neg: ['А'],
+      pos: ['epileptoid', 'hysterical'],
+      neg: ['asthenic'],
     },
     157: {
-      pos: ['А'],
+      pos: ['asthenic'],
     },
     158: {
       pos: [-1],
       neg: [2],
     },
     159: {
-      pos: ['Л', 'А'],
-      neg: ['И'],
+      pos: ['labile', 'asthenic'],
+      neg: ['hysterical'],
     },
     160: {
-      neg: ['Э', 'Э'],
+      neg: ['epileptoid', 'epileptoid'],
     },
     161: {
-      neg: ['Э', 'Э'],
+      neg: ['epileptoid', 'epileptoid'],
     },
     162: {
-      pos: ['Е'],
-      neg: ['П', 'П'],
+      pos: ['emancipation'],
+      neg: ['psychasthenic', 'psychasthenic'],
     },
     163: {
-      pos: ['Г'],
-      neg: ['С'],
+      pos: ['hyperthymic'],
+      neg: ['sensitive'],
     },
     164: {
-      pos: ['Г', 'М'],
-      neg: ['d'],
+      pos: ['hyperthymic', 'genderRoleM'],
+      neg: ['delinquency'],
     },
     165: {
-      pos: ['С'],
+      pos: ['sensitive'],
     },
     166: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     167: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     168: {
-      pos: ['Г', 'Э', 'Н'],
-      neg: ['С', 'П', 'Ш', 'Ш', 'Ш'],
+      pos: ['hyperthymic', 'epileptoid', 'unstable'],
+      neg: ['sensitive', 'psychasthenic', 'schizoid', 'schizoid', 'schizoid'],
     },
     169: {
-      pos: ['К'],
+      pos: ['conformal'],
     },
     170: {
-      pos: ['Е'],
+      pos: ['emancipation'],
     },
     171: {
-      neg: ['Л'],
+      neg: ['labile'],
     },
     172: {
-      neg: ['С'],
+      neg: ['sensitive'],
     },
     173: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     174: {
-      neg: ['К', 'В'],
+      neg: ['conformal', 'organicNature'],
     },
     175: {
-      pos: ['Д'],
+      pos: ['dissimulation'],
     },
     176: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     177: {
-      pos: ['Ф'],
+      pos: ['genderRoleF'],
     },
     178: {
-      pos: ['Е', 'Ф', 'Ф', 'Ф'],
+      pos: ['emancipation', 'genderRoleF', 'genderRoleF', 'genderRoleF'],
     },
     179: {
-      neg: ['И'],
+      neg: ['hysterical'],
     },
     180: {
-      pos: ['Т'],
+      pos: ['heightenedFrankness'],
     },
     181: {
-      pos: ['М'],
+      pos: ['genderRoleM'],
     },
     182: {
-      neg: ['А', 'В'],
+      neg: ['asthenic', 'organicNature'],
     },
     183: {
-      neg: ['Э', 'Ф'],
+      neg: ['epileptoid', 'genderRoleF'],
     },
     184: {
-      pos: ['Ш'],
+      pos: ['schizoid'],
     },
     185: {
-      pos: ['Л', 'С'],
+      pos: ['labile', 'sensitive'],
     },
     186: {
-      pos: ['Е'],
-      neg: ['Ц'],
+      pos: ['emancipation'],
+      neg: ['cycloid'],
     },
     187: {
-      neg: ['П', 'П'],
+      neg: ['psychasthenic', 'psychasthenic'],
     },
     188: {
-      pos: ['Ц'],
+      pos: ['cycloid'],
     },
     189: {
-      pos: ['Г', 'Г', 2],
-      neg: ['С', -1],
+      pos: ['hyperthymic', 'hyperthymic', 2],
+      neg: ['sensitive', -1],
     },
     190: {
-      pos: ['И', 'М'],
+      pos: ['hysterical', 'genderRoleM'],
     },
     191: {
-      pos: ['Э'],
-      neg: ['Г'],
+      pos: ['epileptoid'],
+      neg: ['hyperthymic'],
     },
     192: {
-      pos: ['Ш', 'В'],
-      neg: ['П', 'П', 'Э'],
+      pos: ['schizoid', 'organicNature'],
+      neg: ['psychasthenic', 'psychasthenic', 'epileptoid'],
     },
     193: {
-      pos: ['А'],
+      pos: ['asthenic'],
     },
     194: {
-      pos: ['Д'],
-      neg: ['Ц'],
+      pos: ['dissimulation'],
+      neg: ['cycloid'],
     },
     195: {
-      pos: ['Н'],
+      pos: ['unstable'],
     },
   },
 };

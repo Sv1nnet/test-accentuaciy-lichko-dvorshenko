@@ -129,6 +129,7 @@ const arrowsContainer = {
           if (progressBar.counter === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
             state.zeroAnswersHandled = true;
             // processing results
+            state.zeroAnswersList = results.getZeroAnswers(state);
             results.processResults(state);
           }
         }
@@ -137,7 +138,7 @@ const arrowsContainer = {
         // If question is the last then process results
         if (progressBar.counter === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
           state.zeroAnswersList = results.getZeroAnswers(state);
-          const currentZeroQuestion = state.zeroAnswersList.getFirst();
+          const currentZeroQuestion = state.zeroAnswersList.getLength() > 0 ? state.zeroAnswersList.getFirst() : null;
           console.log('getting zero answers');
 
           // Step 1
@@ -158,6 +159,10 @@ const arrowsContainer = {
 
             // Reset progress bar
             progressBar.resetProgressBar(state.zeroAnswersList.getLength());
+          } else {
+            state.zeroAnswersHandled = true;
+            // processing results
+            results.processResults(state);
           }
         }
       };

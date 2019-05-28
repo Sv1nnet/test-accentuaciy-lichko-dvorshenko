@@ -199,6 +199,7 @@ function processResults(state) {
   console.log('prcessing results');
   mergeQuestions(state);
   countExtremeAnswers(state, 3);
+  createChart(state);
 }
 
 // Step 1
@@ -207,17 +208,18 @@ function getZeroAnswers(state) {
   const zeroAnswersList = new DoubleLinkedList();
   const length = questionsList.getLength();
 
-  let count = 1;
+  // let count = 1;
   let currentQuestion = questionsList.getFirst();
 
-  while (count <= length) {
+  while (currentQuestion !== null) {
     if (currentQuestion.data.answer === '0') {
       zeroAnswersList.add(currentQuestion.data);
     }
 
-    currentQuestion = count !== length ? questionsList.getNext() : currentQuestion;
-    count += 1;
+    currentQuestion = currentQuestion.next !== null ? questionsList.getNext() : null;
+    // count += 1;
   }
+  state.result.extraInfo.negativeAttitude.value = zeroAnswersList.getLength();
 
   return zeroAnswersList;
 }
@@ -227,18 +229,18 @@ function mergeQuestions(state) {
   console.log('merging');
   const length = state.questionsList.getLength();
 
-  let count = 0;
+  // let count = 0;
   let currentQuestion = state.questionsList.getFirst();
-  let currentZeroQuestion = state.zeroAnswersList.getFirst();
+  let currentZeroQuestion = state.zeroAnswersList.getLength() > 0 ? state.zeroAnswersList.getFirst() : null;
 
-  while (count <= length) {
+  while (currentZeroQuestion !== null && currentQuestion !== null) {
     if (currentQuestion.data.index === currentZeroQuestion.data.index) {
       currentQuestion.data.answer = currentZeroQuestion.data.answer;
       currentZeroQuestion = currentZeroQuestion.next !== null ? state.zeroAnswersList.getNext() : currentZeroQuestion;
     }
 
-    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
-    count += 1;
+    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : null;
+    // count += 1;
   }
   console.log('merged');
 }
@@ -250,7 +252,7 @@ function countExtremeAnswers(state, assessment) {
   const extremeAnswersList = new DoubleLinkedList();
 
   let currentQuestion = state.questionsList.getFirst();
-  let count = 0;
+  // let count = 0;
   let pos = '';
   let neg = '';
   if (assessment === 3) {
@@ -262,13 +264,13 @@ function countExtremeAnswers(state, assessment) {
     neg = '-2';
   }
 
-  while (count <= length) {
+  while (currentQuestion !== null) {
     if (currentQuestion.data.answer === pos || currentQuestion.data.answer === neg) {
-      extremeAnswersList.add({ index: currentQuestion.data.index, answer: currentQuestion.data.answer })
+      extremeAnswersList.add({ index: currentQuestion.data.index, answer: currentQuestion.data.answer });
     }
 
-    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
-    count += 1;
+    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : null;
+    // count += 1;
   }
   console.log('extreme finished', extremeAnswersList);
   state.extremeAnswersList = extremeAnswersList;
@@ -282,11 +284,13 @@ function createChart(state) {
   let count = 0;
   let currentQuestion = extremeAnswersList.getFirst();
 
-  while (count <= length) {
-    // switch (currentQuestion.data.index)
-    currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : currentQuestion;
+  while (count < length) {
+    portableCode.calcAnswers(state.result, currentQuestion.data);
+    currentQuestion = currentQuestion.next !== null ? state.extremeAnswersList.getNext() : currentQuestion;
     count += 1;
   }
+
+  portableCode.addExtraPoints(state.result);
 }
 
 const results = {

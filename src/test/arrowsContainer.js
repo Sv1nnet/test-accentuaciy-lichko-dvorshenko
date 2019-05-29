@@ -120,11 +120,6 @@ const arrowsContainer = {
         }
 
         // If question is the last in zeroAnsweredList then process results from step 2
-        console.log('state.zeroAnswersList', state.zeroAnswersList);
-        console.log('currentQuestion.data.index === length', currentQuestion.data.index === length);
-        console.log('arrowsContainer.rightArrow.active', arrowsContainer.rightArrow.active);
-        console.log('state.zeroAnswersHandled', state.zeroAnswersHandled);
-
         if (state.zeroAnswersList) {
           if (progressBar.counter === length && arrowsContainer.rightArrow.active && !state.zeroAnswersHandled) {
             state.zeroAnswersHandled = true;

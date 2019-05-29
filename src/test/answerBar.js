@@ -6,7 +6,7 @@ const answerBar = {
   answerInputEventHandler: null,
   setAnswerInputEventHandler: null,
   init(arrowsContainer) {
-    this.answerInputs = $('input[type=radio]');
+    this.answerInputs = $('ul.answer input[type=radio]');
 
     this.getCurrentAnswerAndSetInputChecked = function getCurrentAnswerAndSetInputChecked(current) {
       const { answer } = current.data;

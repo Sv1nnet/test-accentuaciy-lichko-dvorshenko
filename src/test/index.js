@@ -274,7 +274,6 @@ window.state = state;
 window.$ = jQuery;
 
 window.onload = function() {
-  // alert('Вам будут предложены вопросы, на которые вы ответили "Примерно одинакого - 0". Попробуйте выбрать менее нейтральный ответ. Если выбрать другой ответ всё же не получается, оставьте его как есть.')
   // Init question container and question text holder elements
   const questionContainer = $('.questions'),
     questionElements = $('.question > p');
@@ -294,6 +293,30 @@ window.onload = function() {
       transform: 'translate(-33.3333%)',
     },
   };
+
+  // Gernder form in modal window for setting user gender
+  const genderForm = {
+    modal: $('.modal'),
+    container: $('.gender-question-container'),
+    inputs: $('.gender-question-container input[name=gender]'),
+    nextBtn: $('.gender-question-container button'),
+    init: function() {
+      // Set gender in state extraInfo
+      this.inputs.on('click', function(e) {
+        state.result.extraInfo.gender = e.target.value;
+      });
+
+      // Close modal if gender is set in state
+      this.nextBtn.on('click', (e) => {
+        if (state.result.extraInfo.gender) {
+          this.modal.addClass('hidden');
+        }
+      });
+    },
+  }
+
+  genderForm.init();
+  window.genderForm = genderForm;
 
   // Init question list. We will use it into slider
   state.questions.forEach((el, i) => {

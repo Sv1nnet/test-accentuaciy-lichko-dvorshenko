@@ -3,6 +3,45 @@
 @import "../reset"
 @import "../components"
 
+.modal
+  position: fixed
+  z-index: 1001
+  top: -46px
+  height: 100%
+  width: 100%
+  .gender-question-container
+    width: 320px
+    height: 165px
+    background: white
+    position: absolute
+    z-index: 1002
+    top: 50%
+    transform: translateY(-50%)
+    border: 1px black solid
+    p
+      margin:
+        top: 25px
+      font-size: 20px
+      text-align: center
+    &__answer
+      margin:
+        top: 25px
+      text-align: center
+      label
+        display: inline-block
+        margin: 0 25px
+      button
+        display: inline-block
+        margin:
+          top: 25px
+        
+
+  .modal-bg
+    height: calc(100% + 46px);
+    width: 100%
+    background: #000
+    opacity: .4
+
 .instructions-container
   position: fixed
   z-index: 1000

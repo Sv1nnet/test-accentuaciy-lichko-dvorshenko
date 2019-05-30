@@ -264,6 +264,8 @@ const state = {
       drugsRisk: undefined,
       discordance: undefined,
       suicideAttempts: undefined,
+      _chartCreated: false,
+      _assasmentToCountAnswers: 0,
     },
   },
   _questionRestoreInterval: undefined,

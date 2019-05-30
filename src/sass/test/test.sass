@@ -46,9 +46,15 @@
     background: #000
     opacity: .4
 
+.all-test-container
+  max-width: 600px
+  margin: 0 auto
+  overflow: hidden
+
 .instructions-container
   position: fixed
   z-index: 1000
+  max-width: 600px
   top: 0
   border: $accent-color 1px solid
   border-bottom: transparent 1px solid
@@ -124,6 +130,9 @@
   .questions-container
     min-height: 126px
     overflow: hidden
+    border:
+      left: black 1px solid
+      right: black 1px solid
     .questions
       width: 300%
       transition: .4s
@@ -171,6 +180,8 @@
     width: 50%
     float: left
     border: black 1px solid
+    border:
+      left: black 2px solid
     border-bottom: transparent 0px solid
     text-align: center
     &:focus

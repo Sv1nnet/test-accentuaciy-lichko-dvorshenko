@@ -13,7 +13,7 @@
 <body>
   <div class="modal">
     <div class="gender-question-container">
-      
+
       <div class="gender-question-wrapper">
         <p>Ваш пол:</p>
         <div class="gender-question-container__answer">
@@ -27,99 +27,102 @@
           </label>
           <button type="button">Далее</button>
         </div>
-
       </div>
+
     </div>
     <div class="modal-bg"></div>
   </div>
 
-  <div class="instructions-container">
-    <h1>Инструкции</h1>
-    <div class="instructions-content">
-      <p>
-        Внимательно прочитайте каждое из утверждений и ответьте, в какой степени это характерно для Вас (ДА) или не
-        характерно(НЕТ), пользуясь таблицей со шкалой соотношений значений (ДА / НЕТ). Для ответа на вопрос нажмите на
-        соответствующую цифру, расопложенную под текстом вопроса.
-      </p>
-      <p>
-        Отвечайте искренне, долго не задумываясь. Ваши ответы останутся в тайне.
-      </p>
-    </div>
-  </div>
-
-  <div class="test-container">
-
-    <div class="progressbar-container">
-      <div class="progressbar-line"></div>
-      <div class="progressbar-counter">
-        <span id="answered">1</span>
-        <span>/</span>
-        <span id="total">195</span>
+  <div class="all-test-container">
+    <div class="instructions-container">
+      <h1>Инструкции</h1>
+      <div class="instructions-content">
+        <p>
+          Внимательно прочитайте каждое из утверждений и ответьте, в какой степени это характерно для Вас (ДА) или не
+          характерно(НЕТ), пользуясь таблицей со шкалой соотношений значений (ДА / НЕТ). Для ответа на вопрос нажмите на
+          соответствующую цифру, расопложенную под текстом вопроса.
+        </p>
+        <p>
+          Отвечайте искренне, долго не задумываясь. Ваши ответы останутся в тайне.
+        </p>
       </div>
     </div>
 
-    <div class="questions-container">
-      <div class="questions clearfix">
-        <div class="question">
-          <p></p>
-        </div>
-        <div class="question">
-          <p>1. У меня почти всегда плохое самочувствие.</p>
-        </div>
-        <div class="question">
-          <p>2. В одни дни я встаю веселым и жизнерадостным, в другие — безо всякой причины с утра угнетен и уныл.</p>
+    <div class="test-container">
+
+      <div class="progressbar-container">
+        <div class="progressbar-line"></div>
+        <div class="progressbar-counter">
+          <span id="answered">1</span>
+          <span>/</span>
+          <span id="total">195</span>
         </div>
       </div>
-    </div>
 
-    <div class="answer-container">
-      <ul class="answer clearfix">
-        <li>
-          <input type="radio" name="answer" id="n-three" value="-3">
-          <label for="n-three">-3</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="n-two" value="-2">
-          <label for="n-two">-2</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="n-one" value="-1">
-          <label for="n-one">-1</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="zero" value="0">
-          <label for="zero">0</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="y-one" value="1">
-          <label for="y-one">1</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="y-two" value="2">
-          <label for="y-two">2</label>
-        </li>
-        <li>
-          <input type="radio" name="answer" id="y-three" value="3">
-          <label for="y-three">3</label>
-        </li>
-      </ul>
-    </div>
+      <div class="questions-container">
+        <div class="questions clearfix">
+          <div class="question">
+            <p></p>
+          </div>
+          <div class="question">
+            <p>1. У меня почти всегда плохое самочувствие.</p>
+          </div>
+          <div class="question">
+            <p>2. В одни дни я встаю веселым и жизнерадостным, в другие — безо всякой причины с утра угнетен и уныл.</p>
+          </div>
+        </div>
+      </div>
 
-    <div class="nav-arrows-container clearfix">
-      <button class="left-arrow"><span class="arrow not-active"></span></button>
-      <button class="right-arrow"><span class="arrow not-active"></span><span class="results">Завершить</span></button>
-    </div>
+      <div class="answer-container">
+        <ul class="answer clearfix">
+          <li>
+            <input type="radio" name="answer" id="n-three" value="-3">
+            <label for="n-three">-3</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="n-two" value="-2">
+            <label for="n-two">-2</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="n-one" value="-1">
+            <label for="n-one">-1</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="zero" value="0">
+            <label for="zero">0</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="y-one" value="1">
+            <label for="y-one">1</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="y-two" value="2">
+            <label for="y-two">2</label>
+          </li>
+          <li>
+            <input type="radio" name="answer" id="y-three" value="3">
+            <label for="y-three">3</label>
+          </li>
+        </ul>
+      </div>
 
-    <div class="answer-explanations">
-      <div class="explanation-container"><span>ДА, это всецело про меня</span><span>3</span></div>
-      <div class="explanation-container"><span>ДА, похоже, но не совсем</span><span>2</span></div>
-      <div class="explanation-container"><span>Скорее ДА, чем НЕТ</span><span>1</span></div>
-      <div class="explanation-container"><span>Примерно одинаково</span><span>0</span></div>
-      <div class="explanation-container"><span>Скорее НЕТ, чем ДА</span><span>-1</span></div>
-      <div class="explanation-container"><span>НЕТ, но что-то есть</span><span>-2</span></div>
-      <div class="explanation-container"><span>НЕТ, это не про меня</span><span>-3</span></div>
-    </div>
+      <div class="nav-arrows-container clearfix">
+        <button class="left-arrow"><span class="arrow not-active"></span></button>
+        <button class="right-arrow"><span class="arrow not-active"></span><span
+            class="results">Завершить</span></button>
+      </div>
 
+      <div class="answer-explanations">
+        <div class="explanation-container"><span>ДА, это всецело про меня</span><span>3</span></div>
+        <div class="explanation-container"><span>ДА, похоже, но не совсем</span><span>2</span></div>
+        <div class="explanation-container"><span>Скорее ДА, чем НЕТ</span><span>1</span></div>
+        <div class="explanation-container"><span>Примерно одинаково</span><span>0</span></div>
+        <div class="explanation-container"><span>Скорее НЕТ, чем ДА</span><span>-1</span></div>
+        <div class="explanation-container"><span>НЕТ, но что-то есть</span><span>-2</span></div>
+        <div class="explanation-container"><span>НЕТ, это не про меня</span><span>-3</span></div>
+      </div>
+
+    </div>
   </div>
   <script src="../js/test.js"></script>
 </body>

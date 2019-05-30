@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable quote-props */
 import DoubleLinkedList from './doubleLinkedList';
 import portableCode from './portableCode';
@@ -248,6 +250,8 @@ function mergeQuestions(state) {
 // Step 2
 function countExtremeAnswers(state, assessment) {
   console.log('extreme started');
+  state.result._assessmentToCountAnswers = assessment;
+
   const length = state.questionsList.getLength();
   const extremeAnswersList = new DoubleLinkedList();
 
@@ -290,7 +294,24 @@ function createChart(state) {
     count += 1;
   }
 
-  portableCode.addExtraPoints(state.result);
+  if (!state.result._chartCreated) {
+    portableCode.addExtraPoints(state.result);
+    state.result._chartCreated = true;
+  }
+
+  let accentuationDefined = false;
+
+  for (const acc in state.result.accentuations) {
+    if (state.result.accentuations[acc] >= 6) {
+      accentuationDefined = true;
+      break;
+    }
+  }
+
+  if (!accentuationDefined && state.result._assessmentToCountAnswers === 3) {
+    countExtremeAnswers(state, 2);
+    createChart(state);
+  }
 }
 
 const results = {

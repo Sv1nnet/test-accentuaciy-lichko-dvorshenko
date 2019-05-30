@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const portableCode = {
   calcAnswers(result, answer) { // Each while loop we invoke this method and pass state.result and state.extremeAnswersList.getCurrent() into this one
     const { code } = this;
@@ -154,6 +156,28 @@ const portableCode = {
 
     if (extraInfo.addictionToAlcoholism >= 6) {
       accentuations.hysterical += 1;
+    }
+  },
+  findProbableAccentuations(result) {
+    const { accentuations } = result;
+    const probableAccentuations = [];
+    for (const acc in accentuations) {
+      if (accentuations[acc] >= 6) {
+        const accent = {
+          [acc]: accentuations[acc],
+        };
+        probableAccentuations.push(accent);
+      }
+    }
+
+    return probableAccentuations;
+  },
+  findActualAccentuations(probableAccentuations) {
+    if (probableAccentuations.length === 0) {
+      return null;
+    }
+    if (probableAccentuations.length === 1) {
+      return probableAccentuations[0];
     }
   },
   code: {
@@ -794,6 +818,58 @@ const portableCode = {
     },
     195: {
       pos: ['unstable'],
+    },
+  },
+  accentuationsCompatibilityAndDominations: {
+    hyperthymic: {
+      combinations: ['cycloid', 'unstable', 'hysterical'],
+      domination: ['labile', 'sensitive'],
+      totalCombinations: 3,
+    },
+    cycloid: {
+      combinations: ['hyperthymic', 'labile'],
+      domination: [],
+      totalCombinations: 2,
+    },
+    asthenic: {
+      combinations: ['sensitive', 'psychasthenic', 'hysterical', 'labile'],
+      domination: ['hyperthymic', 'cycloid'],
+      tatalCombinations: 4,
+    },
+    psychasthenic: {
+      combinations: ['schizoid', 'sensitive', 'asthenic'],
+      domination: ['hyperthymic', 'cycloid', 'labile'],
+      totalCombinations: 3,
+    },
+    epileptoid: {
+      combinations: ['hysterical', 'unstable', 'schizoid'],
+      domination: ['hyperthymic', 'asthenic', 'sensitive', 'cycloid', 'labile', 'psychasthenic'],
+      totalCombinations: 3,
+    },
+    labile: {
+      combinations: ['cycloid', 'asthenic', 'sensitive', 'hysterical', 'unstable'],
+      domination: [],
+      totalCombinations: 5,
+    },
+    sensitive: {
+      combinations: ['asthenic', 'schizoid', 'labile'],
+      domination: ['cycloid'],
+      totalCombinations: 3,
+    },
+    schizoid: {
+      combinations: ['psychasthenic', 'epileptoid', 'hysterical', 'sensitive', 'unstable'],
+      domination: ['hyperthymic', 'asthenic', 'cycloid', 'labile'],
+      totalCombinations: 5,
+    },
+    hysterical: {
+      combinations: ['hyperthymic', 'asthenic', 'epileptoid', 'labile', 'schizoid', 'unstable'],
+      domination: ['sensitive', 'psychasthenic', 'cycloid'],
+      totalCombinations: 6,
+    },
+    unstable: {
+      combinations: ['hyperthymic', 'epileptoid', 'labile', 'schizoid', 'hysterical'],
+      domination: ['asthenic', 'sensitive', 'cycloid', 'psychasthenic'],
+      totalCombinations: 5,
     },
   },
 };

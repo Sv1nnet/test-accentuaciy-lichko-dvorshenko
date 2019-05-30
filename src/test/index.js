@@ -265,7 +265,7 @@ const state = {
       discordance: undefined,
       suicideAttempts: undefined,
       _chartCreated: false,
-      _assasmentToCountAnswers: 0,
+      _assessmentToCountAnswers: 0,
     },
   },
   _questionRestoreInterval: undefined,

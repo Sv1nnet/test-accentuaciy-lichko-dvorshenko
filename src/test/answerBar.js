@@ -46,7 +46,7 @@ const answerBar = {
 
         // And set arrows active
         arrowsContainer.rightArrow.active = true;
-        arrowsContainer.setArrowsState(answer, arrowsContainer.rightArrow.element, questions);
+        arrowsContainer.setArrowsState(answer, questions);
       };
     };
   },

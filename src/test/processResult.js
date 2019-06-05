@@ -295,6 +295,7 @@ function createChart(state) {
   }
 
   if (!state.result._chartCreated) {
+    // Step 4
     portableCode.addExtraPoints(state.result);
     state.result._chartCreated = true;
   }
@@ -309,9 +310,15 @@ function createChart(state) {
   }
 
   if (!accentuationDefined && state.result._assessmentToCountAnswers === 3) {
+    // Step 5
     countExtremeAnswers(state, 2);
     createChart(state);
   }
+}
+
+// Step 6
+function handleChart(state) {
+  
 }
 
 const results = {

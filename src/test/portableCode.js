@@ -9,7 +9,6 @@ const portableCode = {
     const codes = answerValue > 0 ? answerResult.pos : answerResult.neg;
     if (codes) {
       codes.forEach((el) => {
-        console.log(el);
         switch (el) {
           case 'hyperthymic':
             accentuations.hyperthymic += 1;
@@ -179,6 +178,70 @@ const portableCode = {
     if (probableAccentuations.length === 1) {
       return probableAccentuations[0];
     }
+
+
+  },
+  getConformity(state) {
+    if (state.accentuations.conformal <= 1) {
+      return 'low';
+    }
+    if (state.accentuations.conformal === 2 || state.accentuations.conformal === 3) {
+      return 'moderate';
+    }
+    if (state.accentuations.conformal === 4 || state.accentuations.conformal === 5) {
+      return 'medium';
+    }
+    if (state.accentuations.conformal >= 6) {
+      return 'high';
+    }
+  },
+  getNegativeAttitude(state) {
+    if (state.result.extraInfo.accentuation === 'sensitive' && state.result.extraInfo.negativeAttitude.value >= 6) {
+      return true;
+    }
+    if (state.result.extraInfo.negativeAttitude.value >= 7) {
+      return true;
+    }
+    return false;
+  },
+  getDissimulation(state) {
+    return (state.result.extraInfo.dissimulation.value - state.result.extraInfo.heightenedFrankness.value) >= 4;
+  },
+  getHeightenedFrankness(state) {
+    return state.result.extraInfo.heightenedFrankness.value > state.result.extraInfo.dissimulation.value;
+  },
+  getOrganicNatureChance(state) {
+    return state.result.extraInfo.organicNature.value >= 5;
+  },
+  getEmancipationReaction(state) {
+    if (state.accentuations.emancipation.value <= 1) {
+      return 'low';
+    }
+    if (state.accentuations.emancipation.value === 2 || state.accentuations.emancipation.value === 3) {
+      return 'medium';
+    }
+    if (state.accentuations.emancipation.value === 4 || state.accentuations.emancipation.value === 5) {
+      return 'high';
+    }
+    if (state.accentuations.emancipation.value >= 6) {
+      return 'very high';
+    }
+  },
+  getDelinquency(state) {
+    return state.result.extraInfo.delinquency.value >= 4;
+  },
+  getGenderRole(state) {
+    const { genderRole } = state.result.extraInfo;
+    if ((genderRole.m - genderRole.f) > 0) return 'male';
+    if ((genderRole.m - genderRole.f) < 0) return 'female';
+    return 'equal';
+  },
+  getAddictionToAlcoholism(state) {
+    const { addictionToAlcoholism } = state.result.extraInfo;
+    if (addictionToAlcoholism.value === 0 || addictionToAlcoholism.value === 1) return 'not determined';
+    if (addictionToAlcoholism.value >= 2 && addictionToAlcoholism.value < 6) return 'exists';
+    if (addictionToAlcoholism.value >= 6) return 'demostrative';
+    return 'none';
   },
   code: {
     1: {

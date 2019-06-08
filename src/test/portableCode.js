@@ -196,9 +196,12 @@ const portableCode = {
     }
   },
   getNegativeAttitude(state) {
-    if (state.result.extraInfo.accentuation === 'sensitive' && state.result.extraInfo.negativeAttitude.value >= 6) {
-      return true;
-    }
+    state.result.extraInfo.accentuations.some((accentuation) => {
+      if (accentuation === 'sensitive' && state.result.extraInfo.negativeAttitude.value >= 6) {
+        return true;
+      }
+    });
+
     if (state.result.extraInfo.negativeAttitude.value >= 7) {
       return true;
     }
@@ -242,6 +245,276 @@ const portableCode = {
     if (addictionToAlcoholism.value >= 2 && addictionToAlcoholism.value < 6) return 'exists';
     if (addictionToAlcoholism.value >= 6) return 'demostrative';
     return 'none';
+  },
+  getSocialDisadaptationRisk(state) {
+    const { result } = state;
+    const { accentuations, extraInfo } = result;
+    let score = 0;
+
+    extraInfo.accentuations.forEach((accentuation) => {
+      if (accentuation === 'hyperthymic') {
+        if (accentuations.hyperthymic >= 11) {
+          score += 1;
+        }
+        if (accentuations.epileptoid >= 7) {
+          score += 1;
+        }
+        if (accentuations.unstable >= 8) {
+          score += 1;
+        }
+        if (result.extraInfo.dissimulation.value >= 5) {
+          score += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 5) {
+          score += 1;
+        }
+        if (accentuations.hyperthymic + accentuations.unstable >= 19) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'labile') {
+        if (accentuations.labile >= 12) {
+          score += 1;
+        }
+        if (accentuations.schizoid >= 7) {
+          score += 1;
+        }
+        if (accentuations.unstable >= 7) {
+          score += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 4) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 4) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'sensitive') {
+        if (accentuations.sensitive >= 11) {
+          score += 1;
+        }
+        if (accentuations.epileptoid >= 6) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 3) {
+          score += 1;
+        }
+        if (result.extraInfo.tendencyOfDepression.pos !== 0 && result.extraInfo.tendencyOfDepression.neg !== 0) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'schizoid') {
+        if (accentuations.labile >= 6) {
+          score += 1;
+        }
+        if (accentuations.schizoid >= 12) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 5) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'epileptoid') {
+        if (accentuations.schizoid >= 7) {
+          score += 1;
+        }
+        if (accentuations.hysterical >= 8) {
+          score += 1;
+        }
+        if (accentuations.unstable >= 8) {
+          score += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 5) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 5) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'hysterical') {
+        if (accentuations.asthenic >= 5) {
+          score += 1;
+        }
+        if (accentuations.psychasthenic >= 8) {
+          score += 1;
+        }
+        if (accentuations.hysterical >= 13) {
+          score += 1;
+        }
+        if (accentuations.unstable >= 7) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 6) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'unstable') {
+        if (accentuations.cycloid >= 6) {
+          score += 1;
+        }
+        if (accentuations.hysterical >= 10) {
+          score += 1;
+        }
+        if (result.extraInfo.organicNature.value >= 5) {
+          score += 1;
+        }
+        if (accentuations.asthenic + accentuations.sensitive + accentuations.psychasthenic >= 7) {
+          score += 1;
+        }
+      }
+    });
+    return score;
+  },
+  getProbabilityOfPsychopathy(state) {
+    const { result } = state;
+    const { accentuations, extraInfo } = result;
+    let score = 0;
+
+    extraInfo.accentuations.forEach((accentuation) => {
+      if (accentuation === 'hyperthymic') {
+        if (accentuations.unstable >= 10) {
+          score += 1;
+        }
+        if (accentuations.conformal === 0) {
+          score += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 6) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'labile') {
+        if (accentuations.asthenic >= 6) {
+          score += 1;
+        }
+        if (accentuations.schizoid >= 7) {
+          score += 1;
+        }
+        if (accentuations.conformal === 0) {
+          score += 1;
+        }
+        if (result.extraInfo.dissimulation.value >= 6) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'sensitive') {
+        if (accentuations.sensitive >= 12) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'schizoid') {
+        if (accentuations.hyperthymic <= 1) {
+          score += 1;
+        }
+        if (accentuations.labile <= 1) {
+          score += 1;
+        }
+        if (accentuations.schizoid >= 13) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 7) {
+          score += 1;
+        }
+        if (result.extraInfo.addictionToAlcoholism.value >= 4) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'epileptoid') {
+        if (accentuations.hyperthymic === 0) {
+          score += 1;
+        }
+        if (accentuations.cycloid >= 8) {
+          score += 1;
+        }
+        if (accentuations.conformal <= 1) {
+          score += 1;
+        }
+        if (accentuations.epileptoid >= 10) {
+          score += 1;
+        }
+        if (result.extraInfo.delinquency.value >= 6) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'hysterical') {
+        if (accentuations.asthenic >= 5) {
+          score += 1;
+        }
+        if (result.extraInfo.negativeAttitude.value >= 6) {
+          score += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 6) {
+          score += 1;
+        }
+      }
+
+      if (accentuation === 'unstable') {
+        if (accentuations.unstable >= 12) {
+          score += 1;
+        }
+        if (accentuations.conformal <= 1) {
+          score += 1;
+        }
+        if (result.extraInfo.organicNature.value >= 5) {
+          score += 1;
+        }
+        if (result.extraInfo.addictionToAlcoholism.value <= 6) {
+          score += 1;
+        }
+      }
+    });
+    return {
+      value: score,
+      availability: score > 0,
+    };
+  },
+  getTendencyOfDepression(state) {
+    const { result, accentuations } = state;
+    const { extraInfo } = result;
+
+    if (accentuations.hyperthymic <= 2) {
+      extraInfo.tendencyOfDepression.pos += 1;
+    } else if (accentuations.hyperthymic >= 7) {
+      extraInfo.tendencyOfDepression.neg -= 1;
+    }
+
+    if (accentuations.sensitive >= 7) {
+      extraInfo.tendencyOfDepression.pos += 1;
+    }
+
+    if (accentuations.unstable <= 2) {
+      extraInfo.tendencyOfDepression.pos += 1;
+    } else if (accentuations.hyperthymic >= 7) {
+      extraInfo.tendencyOfDepression.neg -= 1;
+    }
+
+    if (extraInfo.heightenedFrankness.value > extraInfo.dissimulation.value) {
+      extraInfo.tendencyOfDepression.pos += 1;
+    }
+    if (extraInfo.dissimulation.value - extraInfo.heightenedFrankness.value >= 4) {
+      extraInfo.tendencyOfDepression.neg -= 1;
+    }
+
+    if (extraInfo.gender === 'male') {
+      if (extraInfo.genderRole.m < extraInfo.genderRole.f) {
+        extraInfo.tendencyOfDepression.pos += 1;
+      }
+    }
+
+    return {
+      ...extraInfo.tendencyOfDepression,
+      availability: (extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg) > 0,
+    };
   },
   code: {
     1: {

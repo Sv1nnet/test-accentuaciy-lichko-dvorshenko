@@ -225,7 +225,7 @@ const state = {
     },
     extraInfo: {
       gender: undefined,
-      accentuation: undefined,
+      accentuations: [],
       conformity: undefined,
       negativeAttitude: {
         value: 0,
@@ -261,8 +261,15 @@ const state = {
         availability: false,
       },
       socialDisadaptationRisk: undefined,
-      probabilityOfPsychopathy: undefined,
-      tendencyOfDepression: undefined,
+      probabilityOfPsychopathy: {
+        value: 0,
+        availability: false,
+      },
+      tendencyOfDepression: {
+        pos: 0,
+        neg: 0,
+        availability: false,
+      },
       drugsRisk: undefined,
       discordance: undefined,
       suicideAttempts: undefined,

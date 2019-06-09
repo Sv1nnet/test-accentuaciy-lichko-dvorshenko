@@ -233,6 +233,7 @@ const state = {
       },
       dissimulation: {
         value: 0,
+        resulteValue: 0,
         availability: false,
       },
       heightenedFrankness: {
@@ -260,7 +261,10 @@ const state = {
         value: 0,
         availability: false,
       },
-      socialDisadaptationRisk: undefined,
+      socialDisadaptationRisk: {
+        value: 0,
+        risk: false,
+      },
       probabilityOfPsychopathy: {
         value: 0,
         availability: false,
@@ -270,9 +274,18 @@ const state = {
         neg: 0,
         availability: false,
       },
-      drugsRisk: undefined,
-      discordance: undefined,
-      suicideAttempts: undefined,
+      drugsRisk: {
+        value: 0,
+        risk: false,
+      },
+      discordance: {
+        value: 0,
+        availability: false,
+      },
+      suicideAttempts: {
+        value: 0,
+        type: false,
+      },
       _chartCreated: false,
       _assessmentToCountAnswers: 0,
     },

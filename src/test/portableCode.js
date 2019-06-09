@@ -157,325 +157,377 @@ const portableCode = {
       accentuations.hysterical += 1;
     }
   },
-  findProbableAccentuations(result) {
-    const { accentuations } = result;
+  findProbableAccentuations(state) {
+    const { accentuations } = state.result;
     const probableAccentuations = [];
+    const tempAccentuations = [];
+
     for (const acc in accentuations) {
       if (accentuations[acc] >= 6) {
         const accent = {
           [acc]: accentuations[acc],
         };
-        probableAccentuations.push(accent);
+        tempAccentuations.push(accent);
       }
+    }
+
+    if (tempAccentuations.length > 1) {
+      tempAccentuations.forEach((accentuation) => {
+        if (Object.keys(accentuation)[0] !== 'conformal') {
+          probableAccentuations.push(accentuation);
+        }
+      });
     }
 
     return probableAccentuations;
   },
   findActualAccentuations(probableAccentuations) {
     if (probableAccentuations.length === 0) {
-      return null;
+      return [];
     }
     if (probableAccentuations.length === 1) {
-      return probableAccentuations[0];
+      return [probableAccentuations[0]];
     }
 
 
   },
   getConformity(state) {
-    if (state.accentuations.conformal <= 1) {
-      return 'low';
+    let conformity = 'low';
+
+    if (state.result.accentuations.conformal <= 1) {
+      conformity = 'low';
     }
-    if (state.accentuations.conformal === 2 || state.accentuations.conformal === 3) {
-      return 'moderate';
+    if (state.result.accentuations.conformal === 2 || state.result.accentuations.conformal === 3) {
+      conformity = 'moderate';
     }
-    if (state.accentuations.conformal === 4 || state.accentuations.conformal === 5) {
-      return 'medium';
+    if (state.result.accentuations.conformal === 4 || state.result.accentuations.conformal === 5) {
+      conformity = 'medium';
     }
-    if (state.accentuations.conformal >= 6) {
-      return 'high';
+    if (state.result.accentuations.conformal >= 6) {
+      conformity = 'high';
     }
+
+    return conformity;
   },
   getNegativeAttitude(state) {
+    const { negativeAttitude } = state.result.extraInfo;
+
     state.result.extraInfo.accentuations.some((accentuation) => {
-      if (accentuation === 'sensitive' && state.result.extraInfo.negativeAttitude.value >= 6) {
-        return true;
+      if (Object.keys(accentuation)[0] === 'sensitive' && state.result.extraInfo.negativeAttitude.value >= 6) {
+        negativeAttitude.availability = true;
       }
     });
 
     if (state.result.extraInfo.negativeAttitude.value >= 7) {
-      return true;
+      negativeAttitude.availability = true;
     }
-    return false;
+
+    return negativeAttitude;
   },
   getDissimulation(state) {
-    return (state.result.extraInfo.dissimulation.value - state.result.extraInfo.heightenedFrankness.value) >= 4;
+    const { dissimulation, heightenedFrankness } = state.result.extraInfo;
+    dissimulation.resultValue = dissimulation.value - heightenedFrankness.value;
+    dissimulation.availability = dissimulation.resultValue >= 4;
+
+    return dissimulation;
   },
   getHeightenedFrankness(state) {
-    return state.result.extraInfo.heightenedFrankness.value > state.result.extraInfo.dissimulation.value;
+    const { heightenedFrankness, dissimulation } = state.result.extraInfo;
+    heightenedFrankness.availability = heightenedFrankness.value > dissimulation.value;
+
+    return heightenedFrankness;
   },
   getOrganicNatureChance(state) {
-    return state.result.extraInfo.organicNature.value >= 5;
+    const { organicNature } = state.result.extraInfo;
+    organicNature.availability = organicNature.value >= 5;
+
+    return organicNature;
   },
   getEmancipationReaction(state) {
-    if (state.accentuations.emancipation.value <= 1) {
-      return 'low';
+    const { emancipation } = state.result.extraInfo;
+
+    if (emancipation.value <= 1) {
+      emancipation.availability = 'low';
     }
-    if (state.accentuations.emancipation.value === 2 || state.accentuations.emancipation.value === 3) {
-      return 'medium';
+    if (emancipation.value === 2 || emancipation.value === 3) {
+      emancipation.availability = 'medium';
     }
-    if (state.accentuations.emancipation.value === 4 || state.accentuations.emancipation.value === 5) {
-      return 'high';
+    if (emancipation.value === 4 || emancipation.value === 5) {
+      emancipation.availability = 'high';
     }
-    if (state.accentuations.emancipation.value >= 6) {
-      return 'very high';
+    if (emancipation.value >= 6) {
+      emancipation.availability = 'very high';
     }
+
+    return emancipation;
   },
   getDelinquency(state) {
-    return state.result.extraInfo.delinquency.value >= 4;
+    const { delinquency } = state.result.extraInfo;
+    delinquency.availability = delinquency.value >= 4;
+
+    return delinquency;
   },
   getGenderRole(state) {
     const { genderRole } = state.result.extraInfo;
-    if ((genderRole.m - genderRole.f) > 0) return 'male';
-    if ((genderRole.m - genderRole.f) < 0) return 'female';
-    return 'equal';
+    genderRole.result = 'equal';
+
+    if ((genderRole.m - genderRole.f) > 0) genderRole.result = 'male';
+    if ((genderRole.m - genderRole.f) < 0) genderRole.result = 'female';
+
+    return genderRole;
   },
   getAddictionToAlcoholism(state) {
     const { addictionToAlcoholism } = state.result.extraInfo;
-    if (addictionToAlcoholism.value === 0 || addictionToAlcoholism.value === 1) return 'not determined';
-    if (addictionToAlcoholism.value >= 2 && addictionToAlcoholism.value < 6) return 'exists';
-    if (addictionToAlcoholism.value >= 6) return 'demostrative';
-    return 'none';
+    if (addictionToAlcoholism.value === 0 || addictionToAlcoholism.value === 1) addictionToAlcoholism.availability = 'not determined';
+    if (addictionToAlcoholism.value >= 2 && addictionToAlcoholism.value < 6) addictionToAlcoholism.availability = 'exists';
+    if (addictionToAlcoholism.value >= 6) addictionToAlcoholism.availability = 'demostrative';
+    return addictionToAlcoholism;
   },
   getSocialDisadaptationRisk(state) {
     const { result } = state;
     const { accentuations, extraInfo } = result;
-    let score = 0;
+    let value = 0;
+    let risk = 'none';
 
     extraInfo.accentuations.forEach((accentuation) => {
-      if (accentuation === 'hyperthymic') {
+      const accent = Object.keys(accentuation)[0];
+
+      if (accent === 'hyperthymic') {
         if (accentuations.hyperthymic >= 11) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.epileptoid >= 7) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.unstable >= 8) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.dissimulation.value >= 5) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.emancipation.value >= 5) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.hyperthymic + accentuations.unstable >= 19) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'labile') {
+      if (accent === 'labile') {
         if (accentuations.labile >= 12) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.schizoid >= 7) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.unstable >= 7) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.emancipation.value >= 4) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 4) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'sensitive') {
+      if (accent === 'sensitive') {
         if (accentuations.sensitive >= 11) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.epileptoid >= 6) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 3) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.tendencyOfDepression.pos !== 0 && result.extraInfo.tendencyOfDepression.neg !== 0) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'schizoid') {
+      if (accent === 'schizoid') {
         if (accentuations.labile >= 6) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.schizoid >= 12) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 5) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'epileptoid') {
+      if (accent === 'epileptoid') {
         if (accentuations.schizoid >= 7) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.hysterical >= 8) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.unstable >= 8) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.emancipation.value >= 5) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 5) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'hysterical') {
+      if (accent === 'hysterical') {
         if (accentuations.asthenic >= 5) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.psychasthenic >= 8) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.hysterical >= 13) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.unstable >= 7) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 6) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'unstable') {
+      if (accent === 'unstable') {
         if (accentuations.cycloid >= 6) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.hysterical >= 10) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.organicNature.value >= 5) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.asthenic + accentuations.sensitive + accentuations.psychasthenic >= 7) {
-          score += 1;
+          value += 1;
         }
       }
     });
-    return score;
+
+    if (value === 1) {
+      risk = 'exists';
+    } else if (value >= 2) {
+      risk = 'high';
+    }
+
+    return {
+      value,
+      risk,
+    };
   },
   getProbabilityOfPsychopathy(state) {
     const { result } = state;
     const { accentuations, extraInfo } = result;
-    let score = 0;
+    let value = 0;
 
     extraInfo.accentuations.forEach((accentuation) => {
-      if (accentuation === 'hyperthymic') {
+      const accent = Object.keys(accentuation)[0];
+
+      if (accent === 'hyperthymic') {
         if (accentuations.unstable >= 10) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.conformal === 0) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.emancipation.value >= 6) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'labile') {
+      if (accent === 'labile') {
         if (accentuations.asthenic >= 6) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.schizoid >= 7) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.conformal === 0) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.dissimulation.value >= 6) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'sensitive') {
+      if (accent === 'sensitive') {
         if (accentuations.sensitive >= 12) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'schizoid') {
+      if (accent === 'schizoid') {
         if (accentuations.hyperthymic <= 1) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.labile <= 1) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.schizoid >= 13) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 7) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.addictionToAlcoholism.value >= 4) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'epileptoid') {
+      if (accent === 'epileptoid') {
         if (accentuations.hyperthymic === 0) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.cycloid >= 8) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.conformal <= 1) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.epileptoid >= 10) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.delinquency.value >= 6) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'hysterical') {
+      if (accent === 'hysterical') {
         if (accentuations.asthenic >= 5) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.negativeAttitude.value >= 6) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.emancipation.value >= 6) {
-          score += 1;
+          value += 1;
         }
       }
 
-      if (accentuation === 'unstable') {
+      if (accent === 'unstable') {
         if (accentuations.unstable >= 12) {
-          score += 1;
+          value += 1;
         }
         if (accentuations.conformal <= 1) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.organicNature.value >= 5) {
-          score += 1;
+          value += 1;
         }
         if (result.extraInfo.addictionToAlcoholism.value <= 6) {
-          score += 1;
+          value += 1;
         }
       }
     });
     return {
-      value: score,
-      availability: score > 0,
+      value,
+      availability: value > 0,
     };
   },
   getTendencyOfDepression(state) {
@@ -514,6 +566,171 @@ const portableCode = {
     return {
       ...extraInfo.tendencyOfDepression,
       availability: (extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg) > 0,
+    };
+  },
+  getDrugsRisk(state) {
+    const { result, accentuations } = state;
+    const { extraInfo } = result;
+    let value = 0;
+    let risk = 'none';
+
+    if (accentuations.sensitive <= 2) {
+      value += 2;
+    }
+    if (accentuations.unstable >= 7) {
+      value += 2;
+    }
+    if (accentuations.epileptoid >= 7) {
+      value += 1;
+    }
+    if (extraInfo.addictionToAlcoholism.value >= 4) {
+      value += 1;
+    }
+
+    if (value <= 1) {
+      risk = 'none';
+    }
+    if (value === 2) {
+      risk = 'middle';
+    }
+    if (value === 3) {
+      risk = 'expressed';
+    }
+    if (value >= 4) {
+      risk = 'very high';
+    }
+
+    return {
+      value,
+      risk,
+    };
+  },
+  getSuicideAttempts(state) {
+    const { result, accentuations } = state;
+    const { extraInfo } = result;
+    let value = 0;
+    let type;
+
+    if (accentuations.sensitive >= 6) {
+      value += 1;
+    } else if (accentuations.sensitive <= 3) {
+      value -= 1;
+    }
+
+    if (accentuations.unstable <= 2) {
+      value += 1;
+    } else if (accentuations.hyperthymic >= 6) {
+      value -= 1;
+    }
+
+    if (accentuations.hyperthymic >= 7) {
+      value -= 1;
+    }
+
+    if (extraInfo.heightenedFrankness.value > extraInfo.dissimulation.value) {
+      value += 1;
+    }
+
+    if (extraInfo.suicideAttempts.value >= 2) {
+      value += 1;
+    } else if (extraInfo.suicideAttempts.value <= -2) {
+      value -= 1;
+    }
+
+    if (extraInfo.discordance.value > 0) {
+      value += 1;
+    }
+
+    if (value > 0) {
+      type = true;
+    } else if (value < 0) {
+      type = false;
+    }
+
+    return {
+      value,
+      type,
+    };
+  },
+  getDiscordance(state) {
+    const { result, accentuations } = state;
+    const { extraInfo } = result;
+    let value = 0;
+    let type;
+
+    extraInfo.accentuations.forEach((accentuation) => {
+      const accent = Object.keys(accentuation)[0];
+
+      if (accent === 'hyperthymic') {
+        if (accentuations.sensitive >= 6) {
+          value += 1;
+        }
+        if (accentuations.psychasthenic >= 6) {
+          value += 1;
+        }
+        if (accentuations.schizoid >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'cycloid') {
+        if (accentuations.schizoid >= 7) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'sensitive') {
+        if (accentuations.epileptoid >= 6) {
+          value += 1;
+        }
+        if (accentuations.hysterical >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'psychasthenic') {
+        if (accentuations.unstable >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'schizoid') {
+        if (accentuations.hyperthymic >= 6) {
+          value += 1;
+        }
+        if (accentuations.cycloid >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'epileptoid') {
+        if (accentuations.sensitive >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'hysterical') {
+        if (accentuations.sensitive >= 6) {
+          value += 1;
+        }
+      }
+
+      if (accent === 'unstable') {
+        if (accentuations.sensitive >= 6) {
+          value += 1;
+        }
+        if (accentuations.psychasthenic >= 6) {
+          value += 1;
+        }
+        if (result.extraInfo.emancipation.value >= 5) {
+          value += 1;
+        }
+      }
+    });
+
+    return {
+      value,
+      availability: value > 0,
     };
   },
   code: {

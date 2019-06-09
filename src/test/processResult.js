@@ -202,6 +202,8 @@ function processResults(state) {
   mergeQuestions(state);
   countExtremeAnswers(state, 3);
   createChart(state);
+  // state.result.extraInfo.organicNature.value = 7;
+  handleChart(state);
 }
 
 // Step 1
@@ -318,7 +320,16 @@ function createChart(state) {
 
 // Step 6
 function handleChart(state) {
-  
+  const { extraInfo } = state.result;
+  extraInfo.conformity = portableCode.getConformity(state);
+  extraInfo.dissimulation = portableCode.getDissimulation(state);
+  extraInfo.accentuations = portableCode.findProbableAccentuations(state);
+  extraInfo.heightenedFrankness = portableCode.getHeightenedFrankness(state);
+  extraInfo.organicNature = portableCode.getOrganicNatureChance(state);
+  extraInfo.emancipation = portableCode.getEmancipationReaction(state);
+  extraInfo.delinquency = portableCode.getDelinquency(state);
+  extraInfo.genderRole = portableCode.getGenderRole(state);
+  extraInfo.addictionToAlcoholism = portableCode.getAddictionToAlcoholism(state);
 }
 
 const results = {

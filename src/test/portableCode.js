@@ -181,15 +181,74 @@ const portableCode = {
 
     return probableAccentuations;
   },
-  findActualAccentuations(probableAccentuations) {
+  findActualAccentuations(state) {
+    const { extraInfo } = state.result;
+    const probableAccentuations = state.result.extraInfo.accentuations;
+    const temp = [];
+
+    // Rule 0
     if (probableAccentuations.length === 0) {
       return [];
     }
+
+    // Rule 1
     if (probableAccentuations.length === 1) {
       return [probableAccentuations[0]];
     }
 
+    // Rule 2 and 3
+    probableAccentuations.forEach((accentuation) => {
+      const accentName = Object.keys(accentuation)[0];
 
+      if (accentName !== 'cycloid' && accentName !== 'conformal') {
+        if (accentName !== 'sensitive' && accentName !== 'psychasthenic') {
+          temp.push(accentuation);
+        } else if (extraInfo.emancipation.value < 4) {
+          temp.push(accentuation);
+        }
+      } else if (!extraInfo.dissimulation.availability) {
+        temp.push(accentuation);
+      }
+    });
+
+    // Rule 6
+    debugger;
+    let highestAccent = temp[0];
+    let highestAccentName = Object.keys(highestAccent)[0];
+
+    temp.forEach((accentuation) => {
+      const accentName = Object.keys(accentuation)[0];
+
+      if (accentuation[accentName] > highestAccent[highestAccentName]) {
+        highestAccent = accentuation;
+        highestAccentName = accentName;
+      }
+    });
+
+    // If minimal difference between the highest accentuation is less than 4 then the rule 6 doesn't work
+    let minimalDifference = 11; // Initially minimal is 11 because this is the biggest difference between the highest value and the minimal necessary value to define an accentuation
+
+    temp.forEach((accentuation) => {
+      const accentName = Object.keys(accentuation)[0];
+
+      if (highestAccentName !== accentName) {
+        const tempDufference = highestAccent[highestAccentName] - accentuation[accentName];
+
+        if (tempDufference < minimalDifference) {
+          minimalDifference = tempDufference;
+        }
+      }
+    });
+
+    // If minimal difference between the highest accentuation is less than 4 then actual accentuation is accentuation with the highest value
+    if (minimalDifference >= 4) {
+      return highestAccent;
+    }
+
+    // Rule 7
+
+
+    return temp;
   },
   getConformity(state) {
     let conformity = 'low';

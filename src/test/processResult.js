@@ -330,6 +330,7 @@ function handleChart(state) {
   extraInfo.delinquency = portableCode.getDelinquency(state);
   extraInfo.genderRole = portableCode.getGenderRole(state);
   extraInfo.addictionToAlcoholism = portableCode.getAddictionToAlcoholism(state);
+  extraInfo.accentuations = portableCode.findActualAccentuations(state);
 }
 
 const results = {

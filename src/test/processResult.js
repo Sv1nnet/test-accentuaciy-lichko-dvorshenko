@@ -3,7 +3,6 @@
 /* eslint-disable quote-props */
 import DoubleLinkedList from './doubleLinkedList';
 import portableCode from './portableCode';
-
 /* eslint-disable no-use-before-define */
 
 /*
@@ -203,6 +202,18 @@ function processResults(state) {
   countExtremeAnswers(state, 3);
   createChart(state);
   // state.result.extraInfo.organicNature.value = 7;
+  state.result.accentuations.labile = 16;
+  state.result.accentuations.psychasthenic = 4;
+  state.result.accentuations.hyperthymic = 13;
+  state.result.accentuations.cycloid = 10;
+  state.result.accentuations.asthenic = 3;
+  state.result.accentuations.sensitive = 3;
+  state.result.accentuations.schizoid = 3;
+  state.result.accentuations.epileptoid = 3;
+  state.result.accentuations.hysterical = 3;
+  state.result.accentuations.unstable = 3;
+  state.result.accentuations.conformal = 3;
+  // state.result.accentuations.hysterical = 15;
   handleChart(state);
 }
 

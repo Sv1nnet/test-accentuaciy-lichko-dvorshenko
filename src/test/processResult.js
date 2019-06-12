@@ -202,19 +202,18 @@ function processResults(state) {
   countExtremeAnswers(state, 3);
   createChart(state);
   // state.result.extraInfo.organicNature.value = 7;
-  state.result.accentuations.labile = 16;
+  state.result.accentuations.hyperthymic = 3;
+  state.result.accentuations.cycloid = 5;
+  state.result.accentuations.labile = 9;
+  state.result.accentuations.asthenic = 2;
+  state.result.accentuations.sensitive = 11;
   state.result.accentuations.psychasthenic = 4;
-  state.result.accentuations.hyperthymic = 13;
-  state.result.accentuations.cycloid = 10;
-  state.result.accentuations.asthenic = 3;
-  state.result.accentuations.sensitive = 3;
-  state.result.accentuations.schizoid = 3;
-  state.result.accentuations.epileptoid = 3;
-  state.result.accentuations.hysterical = 3;
+  state.result.accentuations.schizoid = 7;
+  state.result.accentuations.epileptoid = 5;
+  state.result.accentuations.hysterical = 5;
   state.result.accentuations.unstable = 3;
   state.result.accentuations.conformal = 3;
-  // state.result.accentuations.hysterical = 15;
-  handleChart(state);
+  processChart(state);
 }
 
 // Step 1
@@ -330,7 +329,7 @@ function createChart(state) {
 }
 
 // Step 6
-function handleChart(state) {
+function processChart(state) {
   const { extraInfo } = state.result;
   extraInfo.conformity = portableCode.getConformity(state);
   extraInfo.dissimulation = portableCode.getDissimulation(state);

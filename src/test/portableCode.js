@@ -916,6 +916,7 @@ function findActualAccentuations(state) {
   //   }
   // });
 
+  // Sort accentuation to the find hieghest accentuations those have 4 >= points gap or add all accentuations in highestAccententuations array
   temp.sort((firstAcc, secondAcc) => {
     const firstAccentName = Object.keys(firstAcc)[0];
     const secondAccentName = Object.keys(secondAcc)[0];
@@ -925,10 +926,11 @@ function findActualAccentuations(state) {
     return 0;
   });
 
-  console.log('sort', temp);
-
   // Rule 7 and 8B
   function findCombination(accentuations) {
+    if (accentuations.length === 0 || accentuations.length === 1) {
+      return accentuations;
+    }
     if (accentuations.length === 2) {
       const firstAccentName = Object.keys(accentuations[0])[0];
       const secondAccentName = Object.keys(accentuations[1])[0];
@@ -943,6 +945,35 @@ function findActualAccentuations(state) {
       // Rule 7
       return firstAccentCompatibilityAndDominations.domination.find(accent => accent === secondAccentName) ? [accentuations[0]] : [accentuations[1]];
     }
+
+    const combination = [];
+
+    accentuations.forEach((accent, i) => {
+      const accentName = Object.keys(accent)[0];
+      const { combinations, domination } = accentuationsCompatibilityAndDominations[accentName];
+      let restAccentuations;
+      if (i === 0) {
+        restAccentuations = accentuations.slice(1, accentuations.length);
+      } else if (i === accentuations.length - 1) {
+        restAccentuations = accentuations.slice(0, accentuations.length - 1);
+      } else {
+        restAccentuations = [...accentuations.slice(0, i), ...accentuations.slice(i + 1, accentuations.length)];
+      }
+
+      const isStaying = restAccentuations.every((nextAccent) => {
+        const comparingAccentName = Object.keys(nextAccent)[0];
+        const d = !!domination.find(acc => comparingAccentName === acc);
+        const c = !!combinations.find(acc => comparingAccentName === acc);
+        const result = d || c;
+        return result;
+      });
+
+      if (isStaying) {
+        combination.push(accent);
+      }
+    });
+
+    return combination;
   }
 
   // Rule 5
@@ -987,7 +1018,7 @@ function findActualAccentuations(state) {
   }
 
 
-  return temp;
+  return findCombination(highestAccententuations);
 }
 function getConformity(state) {
   let conformity = 'low';

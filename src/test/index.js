@@ -404,4 +404,10 @@ window.onload = function() {
   arrowsContainer.rightArrow.element.on('click', function() {
     arrowsContainer.rightArrowEventHanler();
   });
+
+
+  // Testing results
+  answers.setAnswers(state, answers.answers);
+  answers.processResults(state);
+  console.table(state.result.extraInfo.accentuations);
 };

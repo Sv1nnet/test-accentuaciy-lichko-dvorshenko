@@ -5,8 +5,6 @@ import progressBar from './progressBar';
 import arrowsContainer from './arrowsContainer';
 import answerBar from './answerBar';
 
-import answers from './completedTest';
-
 const state = {
   questions: [
     'У меня почти всегда плохое самочувствие.',
@@ -406,8 +404,4 @@ window.onload = function() {
   });
 
 
-  // Testing results
-  answers.setAnswers(state, answers.answers);
-  answers.processResults(state);
-  console.table(state.result.extraInfo.accentuations);
 };

@@ -803,31 +803,31 @@ function addExtraPoints(result) {
     accentuations.schizoid += 1;
   }
 
-  if (extraInfo.dissimulation >= 6) {
+  if (extraInfo.dissimulation.value >= 6) {
     accentuations.unstable += 1;
   }
 
-  if (extraInfo.heightenedFrankness > extraInfo.dissimulation) {
+  if (extraInfo.heightenedFrankness.value > extraInfo.dissimulation.value) {
     accentuations.psychasthenic += 1;
     accentuations.psychasthenic += 1;
     accentuations.cycloid += 1;
   }
 
-  if (extraInfo.organicNature === 5) {
+  if (extraInfo.organicNature.value === 5) {
     accentuations.epileptoid += 1;
   }
 
-  if (extraInfo.organicNature >= 6) {
+  if (extraInfo.organicNature.value >= 6) {
     accentuations.epileptoid += 1;
     accentuations.epileptoid += 1;
   }
 
-  if (extraInfo.emancipation >= 6) {
+  if (extraInfo.emancipation.value >= 6) {
     accentuations.schizoid += 1;
     accentuations.hysterical += 1;
   }
 
-  if (extraInfo.delinquency >= 5) {
+  if (extraInfo.delinquency.value >= 5) {
     accentuations.schizoid += 1;
   }
 
@@ -841,11 +841,11 @@ function addExtraPoints(result) {
     accentuations.hysterical += 1;
   }
 
-  if (extraInfo.addictionToAlcoholism <= -6) {
+  if (extraInfo.addictionToAlcoholism.value <= -6) {
     accentuations.sensitive += 1;
   }
 
-  if (extraInfo.addictionToAlcoholism >= 6) {
+  if (extraInfo.addictionToAlcoholism.value >= 6) {
     accentuations.hysterical += 1;
   }
 }
@@ -973,6 +973,24 @@ function findActualAccentuations(state) {
       }
     });
 
+    // Rule 8B
+    if (combination.length > 3) {
+      combination.sort((firstAcc, secondAcc) => {
+        const firstAccentName = Object.keys(firstAcc)[0];
+        const secondAccentName = Object.keys(secondAcc)[0];
+
+        const firstAccentCombinations = accentuationsCompatibilityAndDominations[firstAccentName].totalCombinations;
+        const secondAccentCombinations = accentuationsCompatibilityAndDominations[secondAccentName].totalCombinations;
+
+        if (firstAccentCombinations < secondAccentCombinations) return 1;
+        if (firstAccentCombinations > secondAccentCombinations) return -1;
+        return 0;
+      });
+
+      // Delete an accentuation with the least number of combinations
+      combination.splice(combination.length - 1, 1);
+    }
+
     return combination;
   }
 
@@ -1091,8 +1109,18 @@ function getEmancipationReaction(state) {
   return emancipation;
 }
 function getDelinquency(state) {
-  const { delinquency } = state.result.extraInfo;
-  delinquency.availability = delinquency.value >= 4;
+  const { delinquency, accentuations } = state.result.extraInfo;
+
+  if (accentuations.length === 0) {
+    delinquency.availability = delinquency.value >= 4;
+  } else {
+    accentuations.forEach((accentuation) => {
+      const accentName = Object.keys(accentuation)[0];
+      if (accentName === 'schizoid') {
+        delinquency.availability = 'undiagnosed';
+      }
+    });
+  }
 
   return delinquency;
 }
@@ -1115,10 +1143,12 @@ function getAddictionToAlcoholism(state) {
 function getSocialDisadaptationRisk(state) {
   const { result } = state;
   const { accentuations, extraInfo } = result;
+  const resultAccentuations = extraInfo.accentuations;
+
   let value = 0;
   let risk = 'none';
 
-  extraInfo.accentuations.forEach((accentuation) => {
+  resultAccentuations.forEach((accentuation) => {
     const accent = Object.keys(accentuation)[0];
 
     if (accent === 'hyperthymic') {
@@ -1253,9 +1283,11 @@ function getSocialDisadaptationRisk(state) {
 function getProbabilityOfPsychopathy(state) {
   const { result } = state;
   const { accentuations, extraInfo } = result;
+  const resultAccentuations = extraInfo.accentuations;
+
   let value = 0;
 
-  extraInfo.accentuations.forEach((accentuation) => {
+  resultAccentuations.forEach((accentuation) => {
     const accent = Object.keys(accentuation)[0];
 
     if (accent === 'hyperthymic') {
@@ -1360,8 +1392,8 @@ function getProbabilityOfPsychopathy(state) {
   };
 }
 function getTendencyOfDepression(state) {
-  const { result, accentuations } = state;
-  const { extraInfo } = result;
+  const { result } = state;
+  const { extraInfo, accentuations } = result;
 
   if (accentuations.hyperthymic <= 2) {
     extraInfo.tendencyOfDepression.pos += 1;
@@ -1398,8 +1430,8 @@ function getTendencyOfDepression(state) {
   };
 }
 function getDrugsRisk(state) {
-  const { result, accentuations } = state;
-  const { extraInfo } = result;
+  const { result } = state;
+  const { extraInfo, accentuations } = result;
   let value = 0;
   let risk = 'none';
 
@@ -1435,8 +1467,8 @@ function getDrugsRisk(state) {
   };
 }
 function getSuicideAttempts(state) {
-  const { result, accentuations } = state;
-  const { extraInfo } = result;
+  const { result } = state;
+  const { extraInfo, accentuations } = result;
   let value = 0;
   let type;
 
@@ -1482,11 +1514,13 @@ function getSuicideAttempts(state) {
   };
 }
 function getDiscordance(state) {
-  const { result, accentuations } = state;
-  const { extraInfo } = result;
+  const { result } = state;
+  const { extraInfo, accentuations } = result;
+  const resultAccentuations = extraInfo.accentuations;
+
   let value = 0;
 
-  extraInfo.accentuations.forEach((accentuation) => {
+  resultAccentuations.forEach((accentuation) => {
     const accent = Object.keys(accentuation)[0];
 
     if (accent === 'hyperthymic') {

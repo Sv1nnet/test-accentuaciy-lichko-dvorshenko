@@ -202,17 +202,17 @@ function processResults(state) {
   countExtremeAnswers(state, 3);
   createChart(state);
   // state.result.extraInfo.organicNature.value = 7;
-  state.result.accentuations.hyperthymic = 3;
-  state.result.accentuations.cycloid = 5;
-  state.result.accentuations.labile = 9;
-  state.result.accentuations.asthenic = 2;
-  state.result.accentuations.sensitive = 11;
-  state.result.accentuations.psychasthenic = 4;
-  state.result.accentuations.schizoid = 7;
-  state.result.accentuations.epileptoid = 5;
-  state.result.accentuations.hysterical = 5;
-  state.result.accentuations.unstable = 3;
-  state.result.accentuations.conformal = 3;
+  // state.result.accentuations.hyperthymic = 3;
+  // state.result.accentuations.cycloid = 5;
+  // state.result.accentuations.labile = 9;
+  // state.result.accentuations.asthenic = 2;
+  // state.result.accentuations.sensitive = 11;
+  // state.result.accentuations.psychasthenic = 4;
+  // state.result.accentuations.schizoid = 16;
+  // state.result.accentuations.epileptoid = 16;
+  // state.result.accentuations.hysterical = 13;
+  // state.result.accentuations.unstable = 16;
+  // state.result.accentuations.conformal = 3;
   processChart(state);
 }
 
@@ -294,7 +294,9 @@ function countExtremeAnswers(state, assessment) {
 
 // Step 3
 function createChart(state) {
-  const { extremeAnswersList } = state;
+  const { extremeAnswersList, result } = state;
+  const { extraInfo } = result;
+
   const length = extremeAnswersList.getLength();
 
   let count = 0;
@@ -306,10 +308,18 @@ function createChart(state) {
     count += 1;
   }
 
-  if (!state.result._chartCreated) {
+  if (!state.result.extraInfo._chartCreated) {
     // Step 4
+    extraInfo.dissimulation = portableCode.getDissimulation(state);
+    extraInfo.heightenedFrankness = portableCode.getHeightenedFrankness(state);
+    extraInfo.organicNature = portableCode.getOrganicNatureChance(state);
+    extraInfo.emancipation = portableCode.getEmancipationReaction(state);
+    extraInfo.delinquency = portableCode.getDelinquency(state);
+    extraInfo.genderRole = portableCode.getGenderRole(state);
+    extraInfo.addictionToAlcoholism = portableCode.getAddictionToAlcoholism(state);
+
     portableCode.addExtraPoints(state.result);
-    state.result._chartCreated = true;
+    extraInfo._chartCreated = true;
   }
 
   let accentuationDefined = false;
@@ -332,15 +342,15 @@ function createChart(state) {
 function processChart(state) {
   const { extraInfo } = state.result;
   extraInfo.conformity = portableCode.getConformity(state);
-  extraInfo.dissimulation = portableCode.getDissimulation(state);
   extraInfo.accentuations = portableCode.findProbableAccentuations(state);
-  extraInfo.heightenedFrankness = portableCode.getHeightenedFrankness(state);
-  extraInfo.organicNature = portableCode.getOrganicNatureChance(state);
-  extraInfo.emancipation = portableCode.getEmancipationReaction(state);
-  extraInfo.delinquency = portableCode.getDelinquency(state);
-  extraInfo.genderRole = portableCode.getGenderRole(state);
-  extraInfo.addictionToAlcoholism = portableCode.getAddictionToAlcoholism(state);
   extraInfo.accentuations = portableCode.findActualAccentuations(state);
+  extraInfo.delinquency = portableCode.getDelinquency(state);
+  extraInfo.socialDisadaptationRisk = portableCode.getSocialDisadaptationRisk(state);
+  extraInfo.probabilityOfPsychopathy = portableCode.getProbabilityOfPsychopathy(state);
+  extraInfo.tendencyOfDepression = portableCode.getTendencyOfDepression(state);
+  extraInfo.drugsRisk = portableCode.getDrugsRisk(state);
+  extraInfo.suicideAttempts = portableCode.getSuicideAttempts(state);
+  extraInfo.discordance = portableCode.getDiscordance(state);
 }
 
 const results = {

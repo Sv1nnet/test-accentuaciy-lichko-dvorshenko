@@ -1,0 +1,102 @@
+@import "accentuations-type"
+
+.overlay
+  overflow-x: hidden
+  position: fixed
+  z-index: -1
+  top: 0
+  left: 0
+  height: 100%
+  width: 100%
+  transition: z-index .3s
+  &-not-specialist
+    width: 90%
+    height: 100%
+    float: right
+    position: relative
+    z-index: 1001
+  &.active
+    z-index: 1000
+    .overlay-bg
+      opacity: .3
+    .overlay-content
+      transform: translateX(0)
+  .close-overlay
+    cursor: pointer
+    position: absolute
+    width: 40px
+    height: 40px
+    padding: 6px
+    right: 0
+    top: 0
+    z-index: 1002
+    &::before
+      content: ''
+      width: 35px
+      height: 3px
+      background: black
+      display: block
+      transform: rotate(45deg) translateX(7px) translateY(11px)
+    &::after
+      content: ''
+      width: 35px
+      height: 3px
+      background: black
+      display: block
+      transform: rotate(-45deg) translateX(-9px) translateY(5px)
+  .overlay-content
+    position: absolute
+    width: 100%
+    transform: translateX(100%)
+    height: 100%
+    overflow-y: auto
+    background: white
+    right: 0
+    transition: .3s
+    z-index: 1001
+    h2
+      font-size: em(24)
+      line-height: 24px
+      max-width: 195px
+    p
+      margin:
+        top: 15px
+    &-item
+      position: absolute
+      top: 0
+      left: 0
+      padding: 15px
+      display: none
+      &.active
+        display: block
+      > .overlay-content-warning
+        margin:
+          top: 15px
+        padding:
+          bottom: 5px
+          top: 5px
+        border:
+          top: $accent-color 1px solid
+          bottom: $accent-color 1px solid
+        text-align: center
+        h3
+          color: red
+          font-size: em(18)
+        p
+          margin:
+            top: 6px
+          font-size: em(15)
+
+              
+.overlay
+  
+
+  .overlay-bg
+    position: absolute
+    top: 0
+    left: 0
+    height: 100%
+    width: 100%
+    background: black
+    transition: .2s
+    opacity: 0

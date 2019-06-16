@@ -1,0 +1,71 @@
+@import "../vars"
+@import "../sizes"
+@import "../accentuations-type"
+
+.results
+  max-width: 600px
+  margin: 0 auto
+  overflow: hidden
+  padding: 0 10px 10px 10px
+  background: $main-background-color
+  h1
+    font-size: em(22)
+    font-weight: bold
+    text-align: center
+    margin:
+      top: em(13)
+      bottom: em(17)
+  h2
+    margin:
+      top: em(13)
+    font-size: em(18)
+    font-weight: bold
+  p, ul
+    margin:
+      top: em(8)
+      bottom: em(13)
+    ul
+      margin:
+        top: em(20)
+      span.accentuation-type-name
+        font-weight: bold
+  ul.accentuations-description li
+    margin:
+      top: em(10)
+  h1 + ul
+    li
+      position: relative
+      font-weight: normal
+      margin:
+        top: 8px
+        left: 16px
+      &::before
+        content: ""
+        width: 8px
+        height: 1px
+        position: absolute
+        background: black
+        top: 10px
+        left: -15px
+  .extra-info
+    font-weight: bold
+  .accentuation-type
+    background: white
+    margin-top: 5px
+    transition: .4s
+    a
+      background: $accent-color
+      color: white
+      &:after
+        border-left-color: white
+    .accentuation-type-content
+      max-height: 0px
+      p
+        font-size: em(17)
+      ul
+        font-size: em(18)
+        li
+          font-size: rem(17)
+    &.active .accentuation-type-content
+      max-height: 1800px
+

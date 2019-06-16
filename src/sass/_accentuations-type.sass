@@ -1,0 +1,69 @@
+.accentuation-type
+  margin:
+    top: 15px
+  border: lighten($accent-color, 60) 1px solid
+  border-bottom: none
+  a
+    display: block
+    line-height: 35px
+    background: $main-background-color
+    border-bottom: lighten($accent-color, 60) 1px solid
+    padding:
+      left: 9px
+    font-weight: bold
+    position: relative
+    &:after
+      position: absolute
+      right: 0
+      top: 11px
+      transition: .7s
+      transform-origin: 15%
+      content: ''
+      display: block
+      border: 7px solid transparent
+      border-left: 7px solid $accent-color
+  .accentuation-type-content
+    padding:
+      left: 6px
+      right: 6px
+    max-height: 0
+    overflow: hidden
+    transition: .7s
+    p
+      margin:
+        top: 3px
+        bottom: 6px
+      font-size: em(15)
+    ul
+      font-weight: bold
+      margin:
+        left: 0px
+        top: 15px
+      li
+        font-size: em(15)
+        margin:
+          top: 6px
+          left: 15px
+        position: relative
+        font-weight: normal
+        &:after
+          content: ''
+          display: block
+          width: 8px
+          height: 2px
+          background: black
+          position: absolute
+          left: -15px
+          top: 50%
+      &:last-child
+        li:last-child
+          margin:
+            bottom: 6px
+  &.active 
+    a
+      &:after
+        transform: rotateZ(90deg)
+    .accentuation-type-content
+      // transition: 5s
+      max-height: 1500px
+      border-bottom: lighten($accent-color, 60) 1px solid

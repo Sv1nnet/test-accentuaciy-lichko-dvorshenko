@@ -4,6 +4,9 @@ import DoubleLinkedList from './doubleLinkedList';
 import progressBar from './progressBar';
 import arrowsContainer from './arrowsContainer';
 import answerBar from './answerBar';
+import AccentuationContainer from './accentuationContainer';
+
+import answers from './completedTest';
 
 const state = {
   questions: [
@@ -404,4 +407,15 @@ window.onload = function() {
   });
 
 
+  const types = $('.accentuation-type');
+  types.on('click', function(e) {
+    e.preventDefault();
+    $(this).toggleClass('active');
+  });
+  // Testing results
+  // state.result.extraInfo.gender = 'male';
+  // answers.setAnswers(state, answers.answers);
+  // answers.processResults(state);
+  // console.table(state.result.extraInfo.accentuations);
+  // console.log(state.result.extraInfo);
 };

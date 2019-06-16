@@ -197,7 +197,6 @@ import portableCode from './portableCode';
  */
 
 function processResults(state) {
-  console.log('prcessing results');
   mergeQuestions(state);
   countExtremeAnswers(state, 3);
   createChart(state);
@@ -261,7 +260,6 @@ function mergeQuestions(state) {
 
 // Step 2
 function countExtremeAnswers(state, assessment) {
-  console.log('extreme started');
   state.result._assessmentToCountAnswers = assessment;
 
   const length = state.questionsList.getLength();
@@ -288,7 +286,6 @@ function countExtremeAnswers(state, assessment) {
     currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : null;
     // count += 1;
   }
-  console.log('extreme finished', extremeAnswersList);
   state.extremeAnswersList = extremeAnswersList;
 }
 

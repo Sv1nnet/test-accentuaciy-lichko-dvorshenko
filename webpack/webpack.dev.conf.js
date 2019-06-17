@@ -3,10 +3,22 @@ const merge = require('webpack-merge');
 const baseWebpackConfig = require('./webpack.base.conf');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
+const proxy_headers = {
+  'X-Forwarded-For': 'http://192.168.0.12:8081',
+};
+
 const devWebpackConfig = merge(baseWebpackConfig, {
   mode: 'development',
   devtool: 'cheap-module-eval-source-map',
   devServer: {
+    proxy: {
+      '/': {
+        target: {
+          host: "192.168.0.12",
+          protocol: 'http:',
+        }
+      },
+    },
     contentBase: baseWebpackConfig.externals.path.dist,
     port: 8081,
     overlay: { warnings: true, errors: true },  // show error message on the screen

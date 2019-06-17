@@ -1,6 +1,9 @@
+import $ from 'jquery';
+
 class AccentuationContainer {
-  constructor(type, accentuationsInfo) {
-    const accentuation = accentuationsInfo[type];
+  // constructor(type, accentuationsInfo) {
+  constructor(accentuation) {
+    // const accentuation = accentuationsInfo[type];
     const {
       name,
       description,
@@ -14,7 +17,7 @@ class AccentuationContainer {
 
     const domineTraitsElement = $('<ul>', {
       class: 'domine-traits',
-      text: 'Доминирующие черты',
+      text: 'Доминирующие черты:',
     });
     domineTraits.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(domineTraitsElement);
@@ -22,7 +25,7 @@ class AccentuationContainer {
 
     const attractiveTraitsElement = $('<ul>', {
       class: 'attractive-traits',
-      text: 'Доминирующие черты',
+      text: 'Привлекательные черты:',
     });
     attractiveTraits.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(attractiveTraitsElement);
@@ -30,7 +33,7 @@ class AccentuationContainer {
 
     const repulsiveTraitsElement = $('<ul>', {
       class: 'repulsive-traits',
-      text: 'Доминирующие черты',
+      text: 'Отталкивающие черты:',
     });
     repulsiveTraits.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(repulsiveTraitsElement);
@@ -38,7 +41,7 @@ class AccentuationContainer {
 
     const socialTraitsElement = $('<ul>', {
       class: 'social-traits',
-      text: 'Доминирующие черты',
+      text: 'Особенности общения и дружбы:',
     });
     socialTraits.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(socialTraitsElement);
@@ -46,7 +49,7 @@ class AccentuationContainer {
 
     const attitudeToWorkElement = $('<ul>', {
       class: 'attitude-traits',
-      text: 'Доминирующие черты',
+      text: 'Отношение к учебе и работе:',
     });
     attitudeToWork.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(attitudeToWorkElement);
@@ -54,17 +57,26 @@ class AccentuationContainer {
 
     const conflictSituationsElement = $('<ul>', {
       class: 'conflict-traits',
-      text: 'Доминирующие черты',
+      text: 'Конфликтогенные ситуации:',
     });
     conflictSituations.forEach((trait) => {
       $('<li>', { text: trait }).appendTo(conflictSituationsElement);
     });
 
+    this.infoElements = {
+      domineTraitsElement,
+      attractiveTraitsElement,
+      repulsiveTraitsElement,
+      socialTraitsElement,
+      attitudeToWorkElement,
+      conflictSituationsElement,
+    };
+
     this.container = $('<div>', {
       class: 'accentuation-type',
       on: {
         click(e) {
-          e.preventDeafult();
+          e.preventDefault();
           $(this).toggleClass('active');
         },
       },

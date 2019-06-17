@@ -210,6 +210,7 @@ const state = {
   zeroAnswersList: undefined,
   extremeAnswersList: undefined,
   zeroAnswersHandled: false,
+  accentuationsInfo: undefined,
   result: {
     accentuations: {
       hyperthymic: 0,
@@ -290,6 +291,33 @@ const state = {
       _chartCreated: false,
       _assessmentToCountAnswers: 0,
     },
+  },
+  getAccentuationsInfo() {
+    const { accentuations } = state.result.extraInfo;
+    const query = `?${accentuations.map((el, i) => {
+      const accentName = Object.keys(el)[0];
+      return `accent-${i}=${accentName}`
+    }).join('&')}`;
+
+    const url = `http://192.168.0.12:80/test-accentuations/info.php${query}`;
+    console.log('url', url);
+    
+    $.ajax({
+      type: 'GET',
+      url,
+      success(data) {
+        console.log('data', data);
+
+        const typesResultUl = $('#types-result');
+        for (const accent in data) {
+          typesResultUl.append($('<li>', { text: data[accent].name }));
+          new AccentuationContainer(data[accent]);
+        }
+      },
+      error(data) {
+        console.log('error', data)
+      }
+    });
   },
   _questionRestoreInterval: undefined,
 };
@@ -413,9 +441,10 @@ window.onload = function() {
     $(this).toggleClass('active');
   });
   // Testing results
-  // state.result.extraInfo.gender = 'male';
-  // answers.setAnswers(state, answers.answers);
-  // answers.processResults(state);
+  state.result.extraInfo.gender = 'female';
+  answers.setAnswers(state, answers.answers);
+  answers.processResults(state);
+  state.getAccentuationsInfo();
   // console.table(state.result.extraInfo.accentuations);
   // console.log(state.result.extraInfo);
 };

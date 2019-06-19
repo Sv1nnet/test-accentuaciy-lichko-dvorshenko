@@ -294,21 +294,29 @@ const state = {
   },
   getAccentuationsInfo() {
     const { accentuations } = state.result.extraInfo;
-    const query = `?${accentuations.map((el, i) => {
-      const accentName = Object.keys(el)[0];
-      return `accent-${i}=${accentName}`
-    }).join('&')}`;
+    const url = 'http://192.168.0.12:80/test-accentuations/info.php';
+    const typesResultUl = $('#types-result');
 
-    const url = `http://192.168.0.12:80/test-accentuations/info.php${query}`;
-    console.log('url', url);
-    
+    if (accentuations.length === 0) {
+      typesResultUl.append($('<li>', { text: 'Не выявлено ни одной акцентуации' }));
+
+      return;
+    }
+
+    // Data to send to get accentuations info
+    const data = {
+      accentuations: accentuations.map(el => Object.keys(el)[0]), // Get accentuations names
+    };
+
+    // Send ajax post request to get accentuations info
     $.ajax({
-      type: 'GET',
+      type: 'POST',
       url,
+      data,
       success(data) {
         console.log('data', data);
 
-        const typesResultUl = $('#types-result');
+        // Create accentuations list
         for (const accent in data) {
           typesResultUl.append($('<li>', { text: data[accent].name }));
           new AccentuationContainer(data[accent]);
@@ -440,11 +448,13 @@ window.onload = function() {
     e.preventDefault();
     $(this).toggleClass('active');
   });
+
+  // TODO: Remove this on prod
   // Testing results
   state.result.extraInfo.gender = 'female';
+  genderForm.modal.addClass('hidden');
   answers.setAnswers(state, answers.answers);
   answers.processResults(state);
-  state.getAccentuationsInfo();
   // console.table(state.result.extraInfo.accentuations);
   // console.log(state.result.extraInfo);
 };

@@ -213,6 +213,7 @@ function processResults(state) {
   // state.result.accentuations.unstable = 16;
   // state.result.accentuations.conformal = 3;
   processChart(state);
+  state.getAccentuationsInfo();
 }
 
 // Step 1

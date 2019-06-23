@@ -8,6 +8,154 @@ import AccentuationContainer from './accentuationContainer';
 
 import answers from './completedTest';
 
+const processExtraInfo = {
+  setConformity(state) {
+    const conformity = $('#conformity');
+    const { extraInfo } = state.result;
+
+    switch (extraInfo.conformity) {
+      case 'low':
+        conformity.text('Низкая');
+        break;
+      case 'moderate':
+        conformity.text('Умеренная');
+        break;
+      case 'medium':
+        conformity.text('Средняя');
+        break;
+      case 'high':
+        conformity.text('Высокая');
+        break;
+      default:
+        break;
+    }
+  },
+  setAttitude(state) {
+    const attitude = $('#attitude');
+    const { extraInfo } = state.result;
+
+    extraInfo.negativeAttitude.availability ? attitude.text('Присутствует. Надежность результатов теста может быть ниже') : attitude.text('Не выявлено');
+  },
+  setDissimulation(state) {
+    const dissimulation = $('#dissimulation');
+    const { extraInfo } = state.result;
+
+    extraInfo.dissimulation.availability ? dissimulation.text('Присутствует. Надежность результатов теста может быть ниже') : dissimulation.text('Не выявлена');
+  },
+  setFranskness(state) {
+    const frankness = $('#frankness');
+    const { extraInfo } = state.result;
+
+    extraInfo.heightenedFrankness.availability ? frankness.text('Присутствует. Возможно, иногда вы слишком откровенны с людьми. Психастеники обычно излишне откровенны из-за "гражданской ответствнности". Гипертимы могут быть откровенными сказать, что-то лишнее не спецаильно, а потому, что "пришлось к слову"') : frankness.text('Отсутствует');
+  },
+  setEmancipation(state) {
+    const emancipation = $('#emancipation');
+    const { extraInfo } = state.result;
+
+    switch (extraInfo.emancipation.availability) {
+      case 'low':
+        emancipation.text('Слабая');
+        break;
+      case 'medium':
+        emancipation.text('Умеренная');
+        break;
+      case 'high':
+        emancipation.text('Выраженная');
+        break;
+      case 'very high':
+        emancipation.text('Очень сильная');
+        break;
+
+      default:
+        break;
+    }
+  },
+  setDelinquency(state) {
+    const delinquency = $('#delinquency');
+    const { extraInfo } = state.result;
+
+    if (extraInfo.delinquency.availability !== 'undiagnosed') {
+      extraInfo.delinquency.availability ? delinquency.text('Присутствует') : delinquency.text('Отсутствует');
+    } else {
+      delinquency.text('Не диагностирована');
+    }
+  },
+  setAlcoholism(state) {
+    const alcoholism = $('#alcoholism');
+    const { extraInfo } = state.result;
+
+    switch (extraInfo.addictionToAlcoholism.availability) {
+      case 'absent':
+        alcoholism.text('Отсутствует')
+        break;
+      case 'not determined':
+        alcoholism.text('Не определена')
+        break;
+      case 'exists':
+        alcoholism.text('Присутствует')
+        break;
+      case 'demostrative':
+        alcoholism.text('Дмонстративная. Скорее всего, попытки "залить проблему алкоголем" осуществляются для того, чтобы окружащие обратили на вас и вашу проблему внимание, а не для того, чтобы её действительно "решить"')
+        break;
+
+      default:
+        break;
+    }
+  },
+  setDepression(state) {
+    const depression = $('#depression');
+    const { extraInfo } = state.result;
+
+    switch (extraInfo.tendencyOfDepression.availability) {
+      case 'absent':
+        depression.text('Нет')
+        break;
+      case 'risk':
+        depression.text('Есть');
+        break;
+      case 'not determined':
+        depression.text('Не определена')
+        break;
+      default:
+        break;
+    }
+  },
+  setDiscordance(state) {
+    const discordance = $('#discordance');
+    const { extraInfo } = state.result;
+
+    extraInfo.discordance.availability ? discordance.text('Присутствуют') : discordance.text('Отсутствуют')
+  },
+  setFullResult(state) {
+    const { extraInfo } = state.result;
+    const fullResult = $('#full-result');
+    const resultElements = [];
+    const createHtmlContent = (infoName, content) => {
+      resultElements.push(
+        $('<p>', {
+          text: `${infoName}: `,
+          css: { fontWeight: 'bold' },
+        }).append([
+          $('<br>'),
+          $('<span>', {
+            text: `${content}.`,
+            css: { fontWeight: 'normal' },
+          })
+        ])
+      );
+    }
+
+    createHtmlContent('Конформность', $('#conformity').text());
+    createHtmlContent('Негативное отношение к обследованию', $('#attitude').text());
+    createHtmlContent('Диссимуляция', $('#dissimulation').text());
+    createHtmlContent('Повышенная откровенность', $('#frankness').text());
+    createHtmlContent('Возможность органического происхождения акцентуации', extraInfo.organicNature.availability ? 'Вероятность 50%' : 'Вероятность меньше 50%');
+
+
+    fullResult.append(resultElements);
+  }
+}
+
 const state = {
   questions: [
     'У меня почти всегда плохое самочувствие.',
@@ -292,7 +440,14 @@ const state = {
       _assessmentToCountAnswers: 0,
     },
   },
-  getAccentuationsInfo() {
+  setExtraInfo(processExtraInfo) {
+    for (const processInfo in processExtraInfo) {
+      console.log(processInfo)
+      processExtraInfo[processInfo](this);
+    }
+
+  },
+  getAccentuationsInfo() { // Get info about accentuations form server and inject result in dom
     const { accentuations } = state.result.extraInfo;
     const url = 'http://192.168.0.12:80/test-accentuations/info.php';
     const typesResultUl = $('#types-result');
@@ -359,7 +514,7 @@ window.onload = function() {
     },
   };
 
-  // Gernder form in modal window for setting user gender
+  // Gender form in modal window for setting user gender
   const genderForm = {
     modal: $('.modal'),
     container: $('.gender-question-container'),
@@ -442,11 +597,10 @@ window.onload = function() {
     arrowsContainer.rightArrowEventHanler();
   });
 
-
-  const types = $('.accentuation-type');
-  types.on('click', function(e) {
+  // Set activating action on rollup click
+  $('.content-rollup-container a').on('click', function(e) {
     e.preventDefault();
-    $(this).toggleClass('active');
+    $(e.target.parentElement).toggleClass('active');
   });
 
   // TODO: Remove this on prod
@@ -454,7 +608,7 @@ window.onload = function() {
   state.result.extraInfo.gender = 'female';
   genderForm.modal.addClass('hidden');
   answers.setAnswers(state, answers.answers);
-  answers.processResults(state);
+  answers.processResults(state, processExtraInfo);
   // console.table(state.result.extraInfo.accentuations);
   // console.log(state.result.extraInfo);
 };

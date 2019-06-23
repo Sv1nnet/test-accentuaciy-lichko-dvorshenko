@@ -1,9 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable quote-props */
+/* eslint-disable no-use-before-define */
 import DoubleLinkedList from './doubleLinkedList';
 import portableCode from './portableCode';
-/* eslint-disable no-use-before-define */
 
 /*
  * Процесс обработки результатов:
@@ -196,7 +196,7 @@ import portableCode from './portableCode';
  * - Е >= 5
  */
 
-function processResults(state) {
+function processResults(state, processExtraInfo) {
   mergeQuestions(state);
   countExtremeAnswers(state, 3);
   createChart(state);
@@ -213,6 +213,7 @@ function processResults(state) {
   // state.result.accentuations.unstable = 16;
   // state.result.accentuations.conformal = 3;
   processChart(state);
+  state.setExtraInfo(processExtraInfo);
   state.getAccentuationsInfo();
 }
 
@@ -263,7 +264,6 @@ function mergeQuestions(state) {
 function countExtremeAnswers(state, assessment) {
   state.result._assessmentToCountAnswers = assessment;
 
-  const length = state.questionsList.getLength();
   const extremeAnswersList = new DoubleLinkedList();
 
   let currentQuestion = state.questionsList.getFirst();

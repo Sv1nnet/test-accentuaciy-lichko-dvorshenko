@@ -28,7 +28,8 @@ window.onload = function() {
     currentOpenedElement.toggleClass('active');
   });
 
-  $('.accentuation-type a').on('click', function(e) {
+  $('.content-rollup-container a').on('click', function(e) {
+    e.preventDefault();
     $(e.target.parentElement).toggleClass('active');
   });
 

@@ -1135,6 +1135,7 @@ function getGenderRole(state) {
 }
 function getAddictionToAlcoholism(state) {
   const { addictionToAlcoholism } = state.result.extraInfo;
+  if (addictionToAlcoholism.value <= 0) addictionToAlcoholism.availability = 'absent';
   if (addictionToAlcoholism.value === 0 || addictionToAlcoholism.value === 1) addictionToAlcoholism.availability = 'not determined';
   if (addictionToAlcoholism.value >= 2 && addictionToAlcoholism.value < 6) addictionToAlcoholism.availability = 'exists';
   if (addictionToAlcoholism.value >= 6) addictionToAlcoholism.availability = 'demostrative';
@@ -1424,9 +1425,19 @@ function getTendencyOfDepression(state) {
     }
   }
 
+  let availability = 'not determined';
+
+  if ((extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg) < 0) {
+    availability = 'absent';
+  } else if ((extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg) >= 2) {
+    availability = 'risk';
+  } else {
+    availability = 'not determined';
+  }
+
   return {
     ...extraInfo.tendencyOfDepression,
-    availability: (extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg) > 0,
+    availability,
   };
 }
 function getDrugsRisk(state) {

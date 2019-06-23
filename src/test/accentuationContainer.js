@@ -73,7 +73,7 @@ class AccentuationContainer {
     };
 
     this.container = $('<div>', {
-      class: 'accentuation-type',
+      class: 'content-rollup-container',
       on: {
         click(e) {
           e.preventDefault();
@@ -83,7 +83,7 @@ class AccentuationContainer {
       append: [
         $('<a>', { href: '#', text: name }),
         $('<div>', {
-          class: 'accentuation-type-content',
+          class: 'content-rollup-content',
           append: [
             $('<p>', { text: description }),
             domineTraitsElement,

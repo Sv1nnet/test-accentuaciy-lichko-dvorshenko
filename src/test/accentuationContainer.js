@@ -81,7 +81,11 @@ class AccentuationContainer {
         },
       },
       append: [
-        $('<a>', { href: '#', text: name }),
+        $('<a>', {
+          class: 'accent-name',
+          href: '#',
+          text: name,
+        }),
         $('<div>', {
           class: 'content-rollup-content',
           append: [

@@ -95,7 +95,7 @@ const processExtraInfo = {
         alcoholism.text('Присутствует')
         break;
       case 'demostrative':
-        alcoholism.text('Дмонстративная. Скорее всего, попытки "залить проблему алкоголем" осуществляются для того, чтобы окружащие обратили на вас и вашу проблему внимание, а не для того, чтобы её действительно "решить"')
+        alcoholism.text('Демонстративная. Скорее всего, попытки "залить проблему алкоголем" осуществляются для того, чтобы окружащие обратили на вас и вашу проблему внимание, а не для того, чтобы её действительно "решить"')
         break;
 
       default:
@@ -127,7 +127,7 @@ const processExtraInfo = {
     extraInfo.discordance.availability ? discordance.text('Присутствуют') : discordance.text('Отсутствуют')
   },
   setFullResult(state) {
-    const { extraInfo } = state.result;
+    const { extraInfo, accentuationsData } = state.result;
     const fullResult = $('#full-result');
     const resultElements = [];
     const createHtmlContent = (infoName, content) => {
@@ -145,12 +145,79 @@ const processExtraInfo = {
       );
     }
 
+    let genderRole = 'Пробладание какой-либо роли отсутствует';
+    switch (extraInfo.genderRole.result) {
+      case 'male':
+        genderRole = 'Преобладает мужественность';
+        break;
+      case 'female':
+        genderRole = 'Преобладает женственность';
+        break;
+      default:
+        break;
+    }
+
+    let accentuations = [];
+    for (const accent in accentuationsData) {
+      accentuations.push(accentuationsData[accent].name);
+    }
+
+    
+    let socialDisadaptationRisk = 'Отсутствует';
+    switch (extraInfo.socialDisadaptationRisk.risk) {
+      case 'exists':
+        socialDisadaptationRisk = 'Есть';
+        break;
+      case 'high':
+        socialDisadaptationRisk = 'Высокий';
+        break;
+      default:
+        break;
+    }
+
+    let drugRisk = 'Отсутствует';
+    switch (extraInfo.drugsRisk.risk) {
+      case 'middle':
+        drugRisk = 'Умеренный';
+        break;
+      case 'expressed':
+        drugRisk = 'Выраженный';
+        break;
+      case 'very high':
+        drugRisk = 'Очень высокий';
+        break;
+      default:
+        break;
+    }
+
+    let suicideAttempts = 'Не определено';
+    switch (extraInfo.suicideAttempts.type) {
+      case true:
+        suicideAttempts = 'Истинные'
+        break;
+      case false:
+        suicideAttempts = 'Демонстративные'
+        break;
+      default:
+        break;
+    }
+
     createHtmlContent('Конформность', $('#conformity').text());
     createHtmlContent('Негативное отношение к обследованию', $('#attitude').text());
     createHtmlContent('Диссимуляция', $('#dissimulation').text());
-    createHtmlContent('Повышенная откровенность', $('#frankness').text());
+    createHtmlContent('Повышенная откровенность', extraInfo.heightenedFrankness.availability ? 'Присутствует' : 'Не выявлена');
     createHtmlContent('Возможность органического происхождения акцентуации', extraInfo.organicNature.availability ? 'Вероятность 50%' : 'Вероятность меньше 50%');
-
+    createHtmlContent('Реакция эмасипации', $('#emancipation').text());
+    createHtmlContent('Склонность к делинквентности', $('#delinquency').text());
+    createHtmlContent('Соотношение черт мужественности и женственности', genderRole);
+    createHtmlContent('Психологическая склонность к алкоголизации', $('#alcoholism').text().indexOf('Демонстративная') !== -1 ? 'Демонстративная' : $('#alcoholism').text());
+    createHtmlContent('Типы акцентуации', accentuations.join(', '));
+    createHtmlContent('Риск социальной дезадаптации', socialDisadaptationRisk);
+    createHtmlContent('Возможность формирования личностных расстройств', extraInfo.probabilityOfPsychopathy.availability ? 'Присутствует' : 'Не выявлена');
+    createHtmlContent('Склонность к депрессии', $('#depression').text());
+    createHtmlContent('Риск начала наркотизации', drugRisk);
+    createHtmlContent('Признаки дискордантнтности характера', $('#discordance').text());
+    createHtmlContent('Суицидные попытки', suicideAttempts);
 
     fullResult.append(resultElements);
   }
@@ -439,13 +506,14 @@ const state = {
       _chartCreated: false,
       _assessmentToCountAnswers: 0,
     },
+    accentuationsData: undefined,
   },
   setExtraInfo(processExtraInfo) {
     for (const processInfo in processExtraInfo) {
-      console.log(processInfo)
-      processExtraInfo[processInfo](this);
+      if (processExtraInfo[processInfo] != processExtraInfo.setFullResult) {
+        processExtraInfo[processInfo](this);
+      }
     }
-
   },
   getAccentuationsInfo() { // Get info about accentuations form server and inject result in dom
     const { accentuations } = state.result.extraInfo;
@@ -470,6 +538,9 @@ const state = {
       data,
       success(data) {
         console.log('data', data);
+
+        state.result.accentuationsData = data;
+        processExtraInfo.setFullResult(state); // Show results for specialist
 
         // Create accentuations list
         for (const accent in data) {

@@ -1395,6 +1395,7 @@ function getProbabilityOfPsychopathy(state) {
 function getTendencyOfDepression(state) {
   const { result } = state;
   const { extraInfo, accentuations } = result;
+  let value = 0;
 
   if (accentuations.hyperthymic <= 2) {
     extraInfo.tendencyOfDepression.pos += 1;
@@ -1435,8 +1436,11 @@ function getTendencyOfDepression(state) {
     availability = 'not determined';
   }
 
+  value = extraInfo.tendencyOfDepression.pos + extraInfo.tendencyOfDepression.neg;
+
   return {
     ...extraInfo.tendencyOfDepression,
+    value,
     availability,
   };
 }

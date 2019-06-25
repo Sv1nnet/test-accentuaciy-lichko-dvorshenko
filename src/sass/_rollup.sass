@@ -1,4 +1,4 @@
-.content-rollup-container
+.rollup-container
   margin:
     top: 15px
   border: lighten($accent-color, 60) 1px solid
@@ -22,7 +22,7 @@
       display: block
       border: 7px solid transparent
       border-left: 7px solid $accent-color
-  .content-rollup-content
+  .rollup-content
     padding:
       left: 6px
       right: 6px
@@ -60,10 +60,9 @@
           margin:
             bottom: 6px
   &.active 
-    a
+    & > a
       &:after
         transform: rotateZ(90deg)
-    .content-rollup-content
-      // transition: 5s
-      max-height: 1500px
+    & > .rollup-content
+      max-height: 3500px
       border-bottom: lighten($accent-color, 60) 1px solid

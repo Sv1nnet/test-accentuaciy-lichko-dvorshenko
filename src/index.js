@@ -28,7 +28,7 @@ window.onload = function() {
     currentOpenedElement.toggleClass('active');
   });
 
-  $('.content-rollup-container a').on('click', function(e) {
+  $('.rollup-container a').on('click', function(e) {
     e.preventDefault();
     $(e.target.parentElement).toggleClass('active');
   });

@@ -1,9 +1,8 @@
 import $ from 'jquery';
+import createRollupContaner from './createRollupElement';
 
 class AccentuationContainer {
-  // constructor(type, accentuationsInfo) {
   constructor(accentuation) {
-    // const accentuation = accentuationsInfo[type];
     const {
       name,
       description,
@@ -14,6 +13,8 @@ class AccentuationContainer {
       attitudeToWork,
       conflictSituations,
     } = accentuation;
+
+    const descriptionElement = $('<p>', { text: description });
 
     const domineTraitsElement = $('<ul>', {
       class: 'domine-traits',
@@ -72,34 +73,15 @@ class AccentuationContainer {
       conflictSituationsElement,
     };
 
-    this.container = $('<div>', {
-      class: 'content-rollup-container',
-      on: {
-        click(e) {
-          e.preventDefault();
-          $(this).toggleClass('active');
-        },
-      },
-      append: [
-        $('<a>', {
-          class: 'accent-name',
-          href: '#',
-          text: name,
-        }),
-        $('<div>', {
-          class: 'content-rollup-content',
-          append: [
-            $('<p>', { text: description }),
-            domineTraitsElement,
-            attractiveTraitsElement,
-            repulsiveTraitsElement,
-            socialTraitsElement,
-            attitudeToWorkElement,
-            conflictSituationsElement,
-          ],
-        }),
-      ],
-    }).appendTo('#accentuations-container');
+    this.container = createRollupContaner(name, [
+      descriptionElement,
+      domineTraitsElement,
+      attractiveTraitsElement,
+      repulsiveTraitsElement,
+      socialTraitsElement,
+      attitudeToWorkElement,
+      conflictSituationsElement,
+    ]).appendTo('#accentuations-container');
   }
 }
 

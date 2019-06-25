@@ -5,6 +5,7 @@ import progressBar from './progressBar';
 import arrowsContainer from './arrowsContainer';
 import answerBar from './answerBar';
 import AccentuationContainer from './accentuationContainer';
+import createRollupElement from './createRollupElement';
 
 import answers from './completedTest';
 
@@ -127,9 +128,11 @@ const processExtraInfo = {
     extraInfo.discordance.availability ? discordance.text('Присутствуют') : discordance.text('Отсутствуют')
   },
   setFullResult(state) {
-    const { extraInfo, accentuationsData } = state.result;
+    const { result } = state;
+    const { extraInfo, accentuationsData } = result;
     const fullResult = $('#full-result');
     const resultElements = [];
+    const resultChartDataElements = [];
     const createHtmlContent = (infoName, content) => {
       resultElements.push(
         $('<p>', {
@@ -143,7 +146,23 @@ const processExtraInfo = {
           })
         ])
       );
-    }
+    };
+    const createChartDataContent = (scale, points) => {
+      resultChartDataElements.push(
+        $('<span>', {
+          css: { display: 'inline-block', marginRight: '12px' },
+          append: [
+            $('<span>', {
+              text: `${scale}: `,
+              css: { fontWeight: 'bold' },
+            }),
+            $('<span>', {
+              text: `${points}. `,
+            }),
+          ],
+        })
+      );
+    };
 
     let genderRole = 'Пробладание какой-либо роли отсутствует';
     switch (extraInfo.genderRole.result) {
@@ -162,7 +181,7 @@ const processExtraInfo = {
       accentuations.push(accentuationsData[accent].name);
     }
 
-    
+
     let socialDisadaptationRisk = 'Отсутствует';
     switch (extraInfo.socialDisadaptationRisk.risk) {
       case 'exists':
@@ -219,7 +238,36 @@ const processExtraInfo = {
     createHtmlContent('Признаки дискордантнтности характера', $('#discordance').text());
     createHtmlContent('Суицидные попытки', suicideAttempts);
 
-    fullResult.append(resultElements);
+    createChartDataContent('Д', extraInfo.dissimulation.value);
+    createChartDataContent('Т', extraInfo.heightenedFrankness.value);
+    createChartDataContent('Г', result.accentuations.hyperthymic);
+    createChartDataContent('Ц', result.accentuations.cycloid);
+    createChartDataContent('Л', result.accentuations.labile);
+    createChartDataContent('А', result.accentuations.asthenic);
+    createChartDataContent('С', result.accentuations.sensitive);
+    createChartDataContent('П', result.accentuations.psychasthenic);
+    createChartDataContent('Ш', result.accentuations.schizoid);
+    createChartDataContent('Э', result.accentuations.epileptoid);
+    createChartDataContent('И', result.accentuations.hysterical);
+    createChartDataContent('Н', result.accentuations.unstable);
+    createChartDataContent('O', extraInfo.negativeAttitude.value);
+    createChartDataContent('d', extraInfo.delinquency.value);
+    createChartDataContent('B', extraInfo.organicNature.value);
+    createChartDataContent('K', result.accentuations.conformal);
+    createChartDataContent('E', extraInfo.emancipation.value);
+    createChartDataContent('M', extraInfo.genderRole.m);
+    createChartDataContent('Ф', extraInfo.genderRole.f);
+    createChartDataContent('V', extraInfo.addictionToAlcoholism.value);
+    createChartDataContent('D', extraInfo.tendencyOfDepression.value);
+    createChartDataContent('Дх', extraInfo.discordance.value);
+    createChartDataContent('Nc', extraInfo.drugsRisk.value);
+    createChartDataContent('S', extraInfo.suicideAttempts.value);
+    createChartDataContent('Сд', extraInfo.socialDisadaptationRisk.value);
+    createChartDataContent('Врл', extraInfo.probabilityOfPsychopathy.value);
+    
+    const chartDataElement = createRollupElement('Показатели по графику', resultChartDataElements);
+
+    fullResult.append([...resultElements, chartDataElement]);
   }
 }
 
@@ -669,7 +717,7 @@ window.onload = function() {
   });
 
   // Set activating action on rollup click
-  $('.content-rollup-container a').on('click', function(e) {
+  $('.rollup-container a').on('click', function(e) {
     e.preventDefault();
     $(e.target.parentElement).toggleClass('active');
   });

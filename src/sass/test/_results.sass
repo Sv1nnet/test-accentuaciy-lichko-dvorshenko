@@ -8,6 +8,7 @@
   overflow: hidden
   padding: 0 10px 10px 10px
   background: $main-background-color
+  border: 1px black solid
   h1
     font-size: em(22)
     font-weight: bold
@@ -66,5 +67,22 @@
         font-size: em(18)
         li
           font-size: rem(17)
-    &.active > .rollup-content
-      max-height: 3500px
+    &.active
+      & > .rollup-content
+        max-height: 3500px
+    &#chart-data
+      margin-bottom: 5px
+      &.active
+        > .rollup-content
+          max-height: 120px
+
+form
+  margin-top: 20px
+  textarea
+    resize: none
+  .btn
+    border: none
+    display: block
+    width: 100%
+    margin-top: 15px
+.send-result

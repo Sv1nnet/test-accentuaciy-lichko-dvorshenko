@@ -1,4 +1,4 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 
 function createRollupElement(title, children) {
   return $('<div>', {

@@ -221,54 +221,192 @@ const processExtraInfo = {
         break;
     }
 
-    createHtmlContent('Конформность', $('#conformity').text());
-    createHtmlContent('Негативное отношение к обследованию', $('#attitude').text());
-    createHtmlContent('Диссимуляция', $('#dissimulation').text());
-    createHtmlContent('Повышенная откровенность', extraInfo.heightenedFrankness.availability ? 'Присутствует' : 'Не выявлена');
-    createHtmlContent('Возможность органического происхождения акцентуации', extraInfo.organicNature.availability ? 'Вероятность 50%' : 'Вероятность меньше 50%');
-    createHtmlContent('Реакция эмасипации', $('#emancipation').text());
-    createHtmlContent('Склонность к делинквентности', $('#delinquency').text());
-    createHtmlContent('Соотношение черт мужественности и женственности', genderRole);
-    createHtmlContent('Психологическая склонность к алкоголизации', $('#alcoholism').text().indexOf('Демонстративная') !== -1 ? 'Демонстративная' : $('#alcoholism').text());
-    createHtmlContent('Типы акцентуации', accentuations.join(', '));
-    createHtmlContent('Риск социальной дезадаптации', socialDisadaptationRisk);
-    createHtmlContent('Возможность формирования личностных расстройств', extraInfo.probabilityOfPsychopathy.availability ? 'Присутствует' : 'Не выявлена');
-    createHtmlContent('Склонность к депрессии', $('#depression').text());
-    createHtmlContent('Риск начала наркотизации', drugRisk);
-    createHtmlContent('Признаки дискордантнтности характера', $('#discordance').text());
-    createHtmlContent('Суицидные попытки', suicideAttempts);
+    const resultContent = [
+      {
+        name: 'Конформность',
+        content: $('#conformity').text(),
+      },
+      {
+        name: 'Негативное отношение к обследованию',
+        content: $('#attitude').text(),
+      },
+      {
+        name: 'Диссимуляция',
+        content: $('#dissimulation').text(),
+      },
+      {
+        name: 'Повышенная откровенность',
+        content: extraInfo.heightenedFrankness.availability ? 'Присутствует' : 'Не выявлена',
+      },
+      {
+        name: 'Возможность органического происхождения акцентуации',
+        content: extraInfo.organicNature.availability ? 'Вероятность 50%' : 'Вероятность меньше 50%',
+      },
+      {
+        name: 'Реакция эмасипации',
+        content: $('#emancipation').text(),
+      },
+      {
+        name: 'Склонность к делинквентности',
+        content: $('#delinquency').text(),
+      },
+      {
+        name: 'Соотношение черт мужественности и женственности',
+        content: genderRole,
+      },
+      {
+        name: 'Психологическая склонность к алкоголизации',
+        content: $('#alcoholism').text().indexOf('Демонстративная') !== -1 ? 'Демонстративная' : $('#alcoholism').text(),
+      },
+      {
+        name: 'Типы акцентуации',
+        content: accentuations.join(', '),
+      },
+      {
+        name: 'Риск социальной дезадаптации',
+        content: socialDisadaptationRisk,
+      },
+      {
+        name: 'Возможность формирования личностных расстройств',
+        content: extraInfo.probabilityOfPsychopathy.availability ? 'Присутствует' : 'Не выявлена',
+      },
+      {
+        name: 'Склонность к депрессии',
+        content: $('#depression').text(),
+      },
+      {
+        name: 'Риск начала наркотизации',
+        content: drugRisk,
+      },
+      {
+        name: 'Признаки дискордантнтности характера',
+        content: $('#discordance').text(),
+      },
+      {
+        name: 'Суицидные попытки',
+        content: suicideAttempts,
+      },
+    ];
 
-    createChartDataContent('Д', extraInfo.dissimulation.value);
-    createChartDataContent('Т', extraInfo.heightenedFrankness.value);
-    createChartDataContent('Г', result.accentuations.hyperthymic);
-    createChartDataContent('Ц', result.accentuations.cycloid);
-    createChartDataContent('Л', result.accentuations.labile);
-    createChartDataContent('А', result.accentuations.asthenic);
-    createChartDataContent('С', result.accentuations.sensitive);
-    createChartDataContent('П', result.accentuations.psychasthenic);
-    createChartDataContent('Ш', result.accentuations.schizoid);
-    createChartDataContent('Э', result.accentuations.epileptoid);
-    createChartDataContent('И', result.accentuations.hysterical);
-    createChartDataContent('Н', result.accentuations.unstable);
-    createChartDataContent('O', extraInfo.negativeAttitude.value);
-    createChartDataContent('d', extraInfo.delinquency.value);
-    createChartDataContent('B', extraInfo.organicNature.value);
-    createChartDataContent('K', result.accentuations.conformal);
-    createChartDataContent('E', extraInfo.emancipation.value);
-    createChartDataContent('M', extraInfo.genderRole.m);
-    createChartDataContent('Ф', extraInfo.genderRole.f);
-    createChartDataContent('V', extraInfo.addictionToAlcoholism.value);
-    createChartDataContent('D', extraInfo.tendencyOfDepression.value);
-    createChartDataContent('Дх', extraInfo.discordance.value);
-    createChartDataContent('Nc', extraInfo.drugsRisk.value);
-    createChartDataContent('S', extraInfo.suicideAttempts.value);
-    createChartDataContent('Сд', extraInfo.socialDisadaptationRisk.value);
-    createChartDataContent('Врл', extraInfo.probabilityOfPsychopathy.value);
-    
-    const chartDataElement = createRollupElement('Показатели по графику', resultChartDataElements);
+    resultContent.forEach((content) => {
+      createHtmlContent(content.name, content.content);
+    });
+
+    const specResultContent = [
+      {
+        name: 'Д',
+        content: extraInfo.dissimulation.value,
+      },
+      {
+        name: 'Т',
+        content: extraInfo.heightenedFrankness.value,
+      },
+      {
+        name: 'Г',
+        content: result.accentuations.hyperthymic,
+      },
+      {
+        name: 'Ц',
+        content: result.accentuations.cycloid,
+      },
+      {
+        name: 'Л',
+        content: result.accentuations.labile,
+      },
+      {
+        name: 'А',
+        content: result.accentuations.asthenic,
+      },
+      {
+        name: 'С',
+        content: result.accentuations.sensitive,
+      },
+      {
+        name: 'П',
+        content: result.accentuations.psychasthenic,
+      },
+      {
+        name: 'Ш',
+        content: result.accentuations.schizoid,
+      },
+      {
+        name: 'Э',
+        content: result.accentuations.epileptoid,
+      },
+      {
+        name: 'И',
+        content: result.accentuations.hysterical,
+      },
+      {
+        name: 'Н',
+        content: result.accentuations.unstable,
+      },
+      {
+        name: 'O',
+        content: extraInfo.negativeAttitude.value,
+      },
+      {
+        name: 'd',
+        content: extraInfo.delinquency.value,
+      },
+      {
+        name: 'B',
+        content: extraInfo.organicNature.value,
+      },
+      {
+        name: 'K',
+        content: result.accentuations.conformal,
+      },
+      {
+        name: 'E',
+        content: extraInfo.emancipation.value,
+      },
+      {
+        name: 'M',
+        content: extraInfo.genderRole.m,
+      },
+      {
+        name: 'Ф',
+        content: extraInfo.genderRole.f,
+      },
+      {
+        name: 'V',
+        content: extraInfo.addictionToAlcoholism.value,
+      },
+      {
+        name: 'D',
+        content: extraInfo.tendencyOfDepression.value,
+      },
+      {
+        name: 'Дх',
+        content: extraInfo.discordance.value,
+      },
+      {
+        name: 'Nc',
+        content: extraInfo.drugsRisk.value,
+      },
+      {
+        name: 'S',
+        content: extraInfo.suicideAttempts.value,
+      },
+      {
+        name: 'Сд',
+        content: extraInfo.socialDisadaptationRisk.value,
+      },
+      {
+        name: 'Врл',
+        content: extraInfo.probabilityOfPsychopathy.value,
+      },
+    ];
+
+    specResultContent.forEach((content) => {
+      createChartDataContent(content.name, content.content);
+    });
+
+    const chartDataElement = createRollupElement('Показатели по графику', resultChartDataElements).attr('id', 'chart-data');
 
     fullResult.append([...resultElements, chartDataElement]);
-  }
+  },
 }
 
 const state = {
@@ -462,7 +600,7 @@ const state = {
     'Считаю, что я ничем не отличаюсь от большинства людей.',
     'Сон у меня очень крепкий, но иногда бывают жуткие, кошмарные сновидения.',
     'Люблю выпить в веселой и хорошей компании.',
-    'Не люблю заранее рассчитывать все расходы, легко берув долг, даже если знаю, что к сроку отдать мне будет трудно.',
+    'Не люблю заранее рассчитывать все расходы, легко беру в долг, даже если знаю, что к сроку отдать мне будет трудно.',
     'Я отношусь настороженно к незнакомым людям и невольно опасаюсь зла.',
     'Свои неудачи я переживаю сам и ни у кого не ищу сочувствия и помощи.',
     'Возражения и критика меня очень огорчают, если они резкие и грубые по форме, даже если они касаются мелочей.',
@@ -556,6 +694,7 @@ const state = {
     },
     accentuationsData: undefined,
   },
+  loader: $('#loader'),
   setExtraInfo(processExtraInfo) {
     for (const processInfo in processExtraInfo) {
       if (processExtraInfo[processInfo] != processExtraInfo.setFullResult) {
@@ -567,8 +706,13 @@ const state = {
     const { accentuations } = state.result.extraInfo;
     const url = 'http://192.168.0.12:80/test-accentuations/info.php';
     const typesResultUl = $('#types-result');
+    const { loader } = this;
+
+    $('#loader p').text('Обработка результатов');
+    loader.removeClass('hidden');
 
     if (accentuations.length === 0) {
+      loader.addClass('hidden');
       typesResultUl.append($('<li>', { text: 'Не выявлено ни одной акцентуации' }));
 
       return;
@@ -585,8 +729,6 @@ const state = {
       url,
       data,
       success(data) {
-        console.log('data', data);
-
         state.result.accentuationsData = data;
         processExtraInfo.setFullResult(state); // Show results for specialist
 
@@ -595,6 +737,8 @@ const state = {
           typesResultUl.append($('<li>', { text: data[accent].name }));
           new AccentuationContainer(data[accent]);
         }
+
+        loader.addClass('hidden');
       },
       error(data) {
         console.log('error', data)
@@ -606,13 +750,15 @@ const state = {
 
 // TODO: Remove this on prod
 window.state = state;
-window.$ = jQuery;
 
-window.answers = answers.answers;
-window.setAnswers = answers.setAnswers;
-window.processResults = answers.processResults;
+// window.answers = answers.answers;
+// window.setAnswers = answers.setAnswers;
+// window.processResults = answers.processResults;
 
 window.onload = function() {
+  // Close loader
+  $('#loader').addClass('hidden');
+
   // Init question container and question text holder elements
   const questionContainer = $('.questions'),
     questionElements = $('.question > p');
@@ -655,12 +801,12 @@ window.onload = function() {
   }
 
   genderForm.init();
-  window.genderForm = genderForm;
 
   // Init question list. We will use it into slider
   state.questions.forEach((el, i) => {
     state.questionsList.add({
-      question: i + 1 + '. ' + el,
+      // question: i + 1 + '. ' + el,
+      question: el,
       index: i + 1,
       answer: null,
     });
@@ -674,7 +820,7 @@ window.onload = function() {
   progressBar.init(state);
 
   // Init arrow contaner fields
-  arrowsContainer.init(state, questionContainer, cssStyles, questionElements, results);
+  arrowsContainer.init({ state, questionContainer, cssStyles, questionElements, results, processExtraInfo });
 
   // Answer object
   answerBar.init(arrowsContainer)
@@ -685,22 +831,10 @@ window.onload = function() {
     answerBar.answerInputEventHandler(e);
   });
 
-  // TODO: Remove this on prod
-  window.arrowsContainer = arrowsContainer;
-
-  // TODO: Remove this on prod
-  window.answerBar = answerBar;
-
-  // TODO: Remove this on prod
-  window.progressBar = progressBar;
-
   // Show and hide instructions
   $('.instructions-container').on('click', 'h1', function() {
     $('.instructions-container').toggleClass('active');
   });
-
-  // TODO: Remove this on prod
-  window.questionElements = questionElements;
 
   // Set left arrow event handler with questions list
   arrowsContainer.setLeftArrowEventHanler(questionsList, progressBar, answerBar);
@@ -712,9 +846,9 @@ window.onload = function() {
   // Set right arrow event handler with questions list
   arrowsContainer.setRightArrowEventHanler(questionsList, progressBar, answerBar);
   // Display next question
-  arrowsContainer.rightArrow.element.on('click', function() {
-    arrowsContainer.rightArrowEventHanler();
-  });
+  // arrowsContainer.rightArrow.element.on('click', function() {
+  //   arrowsContainer.rightArrowEventHanler();
+  // });
 
   // Set activating action on rollup click
   $('.rollup-container a').on('click', function(e) {
@@ -724,8 +858,14 @@ window.onload = function() {
 
   // TODO: Remove this on prod
   // Testing results
-  state.result.extraInfo.gender = 'female';
+  state.result.extraInfo.gender = 'male';
   genderForm.modal.addClass('hidden');
+
+  // arrowsContainer.rightArrow.element.on('click', function() {
+  //   answers.setAnswers(state, answers.answers);
+  //   answers.processResults(state, processExtraInfo);
+
+  // });
   answers.setAnswers(state, answers.answers);
   answers.processResults(state, processExtraInfo);
   // console.table(state.result.extraInfo.accentuations);

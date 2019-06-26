@@ -12,7 +12,7 @@ const arrowsContainer = {
   setRightArrowEventHanler: null,
   leftArrowEventHanler: null,
   rightArrowEventHanler: null,
-  init: function init(state, questionContainer, cssStyles, questionElements, results) {
+  init: function init({ state, questionContainer, cssStyles, questionElements, results, processExtraInfo }) {
     this.leftArrow = {
       element: $('.left-arrow'),
       active: false, // Set false to prevent pressing the button until next or previous question is switched
@@ -126,7 +126,7 @@ const arrowsContainer = {
             state.zeroAnswersHandled = true;
             // processing results
             state.zeroAnswersList = results.getZeroAnswers(state);
-            results.processResults(state);
+            results.processResults(state, processExtraInfo);
           }
         }
 

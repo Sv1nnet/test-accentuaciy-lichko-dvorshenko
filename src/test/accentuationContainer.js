@@ -1,4 +1,4 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 import createRollupContaner from './createRollupElement';
 
 class AccentuationContainer {

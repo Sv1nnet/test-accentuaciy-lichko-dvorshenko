@@ -200,18 +200,10 @@ function processResults(state, processExtraInfo) {
   mergeQuestions(state);
   countExtremeAnswers(state, 3);
   createChart(state);
-  // state.result.extraInfo.organicNature.value = 7;
-  // state.result.accentuations.hyperthymic = 3;
-  // state.result.accentuations.cycloid = 5;
-  // state.result.accentuations.labile = 9;
-  // state.result.accentuations.asthenic = 2;
-  // state.result.accentuations.sensitive = 11;
-  // state.result.accentuations.psychasthenic = 4;
-  // state.result.accentuations.schizoid = 16;
-  // state.result.accentuations.epileptoid = 16;
-  // state.result.accentuations.hysterical = 13;
-  // state.result.accentuations.unstable = 16;
-  // state.result.accentuations.conformal = 3;
+
+  $('.all-test-container').addClass('hidden');
+  $('.results').removeClass('hidden');
+
   processChart(state);
   state.setExtraInfo(processExtraInfo);
   state.getAccentuationsInfo();
@@ -221,7 +213,6 @@ function processResults(state, processExtraInfo) {
 function getZeroAnswers(state) {
   const { questionsList } = state;
   const zeroAnswersList = new DoubleLinkedList();
-  const length = questionsList.getLength();
 
   // let count = 1;
   let currentQuestion = questionsList.getFirst();
@@ -241,10 +232,8 @@ function getZeroAnswers(state) {
 
 // Merge answer from zeroAnswersList to questionList
 function mergeQuestions(state) {
-  console.log('merging');
   const length = state.questionsList.getLength();
 
-  // let count = 0;
   let currentQuestion = state.questionsList.getFirst();
   let currentZeroQuestion = state.zeroAnswersList.getLength() > 0 ? state.zeroAnswersList.getFirst() : null;
 
@@ -255,9 +244,7 @@ function mergeQuestions(state) {
     }
 
     currentQuestion = currentQuestion.next !== null ? state.questionsList.getNext() : null;
-    // count += 1;
   }
-  console.log('merged');
 }
 
 // Step 2
@@ -342,6 +329,7 @@ function processChart(state) {
   extraInfo.conformity = portableCode.getConformity(state);
   extraInfo.accentuations = portableCode.findProbableAccentuations(state);
   extraInfo.accentuations = portableCode.findActualAccentuations(state);
+  extraInfo.negativeAttitude = portableCode.getNegativeAttitude(state);
   extraInfo.delinquency = portableCode.getDelinquency(state);
   extraInfo.socialDisadaptationRisk = portableCode.getSocialDisadaptationRisk(state);
   extraInfo.probabilityOfPsychopathy = portableCode.getProbabilityOfPsychopathy(state);

@@ -4,6 +4,31 @@
 @import "../components"
 @import "./results"
 
+#loader
+  position: fixed
+  z-index: 20000
+  height: 100%
+  width: 100%
+  background: $main-background-color
+  p
+    text-align: center
+    font-size: em(25)
+    position: relative
+    top: 50%
+    transform: translateY(-50%)
+    &:after
+      content: ''
+      position: absolute
+      animation: loading 1500ms linear infinite
+
+@keyframes loading
+  25%
+    content: '.'
+  50%
+    content: '..'
+  75%
+    content: '...'
+
 .modal
   position: fixed
   z-index: 1001
@@ -120,8 +145,6 @@
       line-height: 14px;
       position: relative;
       top: -2px;
-      // padding:
-      //   top: 2px
       text-align: center
       background-color: rgba(255, 255, 255, .8)
       span
@@ -213,13 +236,13 @@
         opacity: .35
   .right-arrow
     transform: rotateY(180deg)
-    span.results
+    .arrow-results
       display: none
     &.show-results
       transform: rotateY(0deg)
       .arrow
         display: none
-      span.results
+      .arrow-results
         display: inline-block
 
 .answer-explanations

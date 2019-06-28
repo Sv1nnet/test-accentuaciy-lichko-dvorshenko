@@ -814,7 +814,8 @@ window.onload = function() {
 
   // Questions to display
   const questionsList = state.questionsList;
-  questionsList.getFirst(); // Move to first item in a list
+  // We have to start asking from the first question so we need set first element as a current one. getFirst does it.
+  questionsList.getFirst();
 
   // Init progressbar fields set initial progressbar position
   progressBar.init(state);
@@ -856,6 +857,30 @@ window.onload = function() {
     $(e.target.parentElement).toggleClass('active');
   });
 
+  $('.send-result > .btn').on('click', function(e) {
+    e.preventDefault();
+
+    const { accentuations } = state.result.extraInfo;
+    const email = $('#email')[0].value;
+    const data = {
+      accentuations,
+      email,
+    }
+
+    // Send ajax post request to send result
+    $.ajax({
+      type: 'POST',
+      url: 'http://192.168.0.12:80/test-accentuations/send-email/index.php',
+      data,
+      success(data) {
+        console.log('success', data);
+      },
+      error(data) {
+        console.log('error', data)
+      }
+    });
+  })
+
   // TODO: Remove this on prod
   // Testing results
   state.result.extraInfo.gender = 'male';
@@ -866,8 +891,10 @@ window.onload = function() {
   //   answers.processResults(state, processExtraInfo);
 
   // });
+
   answers.setAnswers(state, answers.answers);
   answers.processResults(state, processExtraInfo);
+
   // console.table(state.result.extraInfo.accentuations);
   // console.log(state.result.extraInfo);
 };

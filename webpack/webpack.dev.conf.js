@@ -14,9 +14,9 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     proxy: {
       '/': {
         target: {
-          host: "192.168.0.12",
+          host: '192.168.0.12',
           protocol: 'http:',
-        }
+        },
       },
     },
     contentBase: baseWebpackConfig.externals.path.dist,

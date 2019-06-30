@@ -2,6 +2,49 @@
 @import "../sizes"
 @import "../rollup"
 
+.modal
+  .submit-result-contaner
+    width: 100%
+    height: 165px
+    position: absolute
+    z-index: 1002
+    top: 50%
+    transform: translateY(-50%)
+    .submit-result-wrapper
+      border: 1px black solid
+      background: $main-background-color
+      height: 100%
+      width: 320px
+      margin: 0 auto
+      position: relative
+      .submit-result-message
+        position: absolute
+        top: 50%
+        left: 50%
+        transform: translateY(-50%) translateX(-50%)
+        width: 320px
+        text-align: center
+        p
+          font-size: em(24)
+      .close-btn
+        width: 25px
+        height: 25px
+        position: absolute
+        top: 0
+        right: 0
+        &:after, &:before
+          content: ''
+          position: absolute
+          left: 0
+          top: 50%
+          width: 25px
+          height: 3px
+          background: black
+          transform: rotate(45deg)
+        &:before
+          transform: rotate(-45deg)
+
+
 .results
   max-width: 600px
   margin: 0 auto
@@ -86,6 +129,7 @@ form
     width: 100%
     margin-top: 15px
 
+
 .social-share
   max-width: 425px
   margin: 22px auto 0 auto
@@ -94,11 +138,13 @@ form
   .social-container
     float: left
     width: 25%
+    text-align: center
     .social-btn
       width: 65px
       height: 65px
       margin: 0 auto
       cursor: pointer
+      display: block
     .facebook
       background: url('../../img/icons/facebook.svg')
     .twitter

@@ -7,10 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <!-- <link rel="stylesheet" href="libs/css/normalize.css"> -->
   <link rel="stylesheet" href="../css/test/test.css">
+  <script type="text/javascript" src="https://vk.com/js/api/share.js?95" charset="windows-1251"></script>
   <title>Тест личностных акцентуаций Личко, Дворщенко</title>
 </head>
 
 <body>
+  <div id="fb-root"></div>
+  <script async defer crossorigin="anonymous"
+    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.3"></script>
   <div id="loader">
     <p>Загрузка вопросов</p>
   </div>
@@ -32,6 +36,15 @@
         </div>
       </div>
 
+    </div>
+
+    <div class="submit-result-contaner hidden">
+      <div class="submit-result-wrapper">
+        <div class="submit-result-message">
+          <p>Отправка...</p>
+        </div>
+        <div class="close-btn"></div>
+      </div>
     </div>
     <div class="modal-bg"></div>
   </div>
@@ -204,7 +217,7 @@
 
     <form class="send-result">
       <label for="email">Отправить результаты на почту</label>
-      <input type="email" name="email" id="email" placeholder="Email">
+      <input type="email" name="email" id="email" placeholder="Email" required>
       <button class="btn" type="submit">Отправить</button>
     </form>
 
@@ -212,23 +225,32 @@
       <span>Неточность в результатах?</span>
       <br>
       <label for="mistake">Сообщите нам:</label>
-      <textarea name="mistake" id="mistake" cols="30" rows="10" placeholder="Расскажите подробнее..."></textarea>
+      <textarea name="mistake" id="mistake" cols="30" rows="10" placeholder="Расскажите подробнее..."
+        required></textarea>
       <button class="btn" type="submit">Сообщить</button>
     </form>
 
     <div class="social-share clearfix">
-      <p>Поделиться результатом</p>
+      <p>Поделиться сайтом</p>
       <div class="social-container">
-        <div class="social-btn facebook"></div>
+        <a target="_blank"
+          href="https://www.facebook.com/sharer/sharer.php?kid_directed_site=0&u=https://accentuations-lychko.ru%2F&display=popup&ref=plugin&src=share_button"
+          class="social-btn facebook"></a>
       </div>
       <div class="social-container">
-        <div class="social-btn twitter"></div>
+        <a class="twitter-share-button" target="_blank"
+          href="https://twitter.com/intent/tweet?text=Тест%20личностных%20акцентуаций%20https://accentuations-lychko.ru">
+          <div class="social-btn twitter"></div>
+        </a>
       </div>
       <div class="social-container">
-        <div class="social-btn vk"></div>
+        <script type="text/javascript">
+          document.write(VK.Share.button({ url: 'https://accentuations-lychko.ru' }, { type: "custom", text: "<img class=\"social-btn\" src=\"../../img/icons/vk.svg\" alt=\"VK\">" }));
+        </script>
       </div>
       <div class="social-container">
-        <div class="social-btn ok"></div>
+        <a href="https://connect.ok.ru/offer?url=https://accentuations-lychko.ru" target="_blank" rel="noopener noreferrer">
+        <div class="social-btn ok"></div></a>
       </div>
     </div>
 

@@ -421,7 +421,7 @@ const state = {
     'В детстве я больше любил беседовать со взрослыми, чем играть со сверстниками.',
     'Мое самочувствие вполне удовлетворительное.',
     'Нередко бывало, что, проснувшись, я не мог сразу сообразить, где я и что со мной.',
-    'В половом отношении я быстро возбуждаюсь, но быстроу спокаиваюсь и охладеваю.',
+    'В половом отношении я быстро возбуждаюсь, но быстро успокаиваюсь и охладеваю.',
     'Я ценю такого друга, который умеет меня выслушать, приободрить, вселить уверенность, успокоить.',
     'Одиночество я переношу легко, если только оно не связано с неприятностями.',
     'Временами я люблю приключения и часто рискую, но временами приключения и риск становятся мне не по душе.',
@@ -432,7 +432,7 @@ const state = {
     'Считаю, что половым проблемам не следует придавать большого значения.',
     'Люблю иметь много друзей и тепло отношусь к ним.',
     'Я уверен, что в будущем докажу всем свою правоту.',
-    'Я люблю быть первым там, где меня любят; бороться запервенство я не люблю.',
+    'Я люблю быть первым там, где меня любят; бороться за первенство я не люблю.',
     'Ужасно не люблю всякие правила, которые меня стесняют.',
     'Я слишком мнителен, без конца тревожусь и беспокоюсь обо всем.',
     'Я сплю мало, но встаю бодрым; сны вижу редко.',
@@ -517,7 +517,7 @@ const state = {
     'Я выпиваю со всеми, чтобы не нарушать компанию.',
     'Мои родные меня не понимают и кажутся мне чужими.',
     'В одиночестве я размышляю или беседую с воображаемым собеседником.',
-    'Я много раз взвешиваю все «за» и «против» и все никакне решаюсь рискнуть.',
+    'Я много раз взвешиваю все «за» и «против» и все никак не решаюсь рискнуть.',
     'Совершенно не переношу наставлений, если они даются начальственным тоном.',
     'Сильно переживал/переживаю замечания и отметки, которые меня не удовлетворяли.',
     'Мое настроение легко меняется от незначительных причин.',
@@ -547,7 +547,7 @@ const state = {
     'Часто мне не хочется просыпаться.',
     'Выпив немного, я особенно ярко воспринимаю окружающий мир.',
     'Родители меня слишком сильно притесняли/притесняют и во всем навязывали/навязывают свою волю.',
-    'Периодами мне лучше среди людей, периодами предпо-читаю одиночество.',
+    'Периодами мне лучше среди людей, периодами предпочитаю одиночество.',
     'Люблю всякие приключения, даже опасные, охотно иду на риск.',
     'Я стараюсь слушать полезные наставления, но это не всегда у меня получается.',
     'Любил/люблю вместо школьных занятий отправиться с товарищами погулять или сходить в кино.',
@@ -557,8 +557,8 @@ const state = {
     'Я чувствую себя таким больным, что мне не до друзей.',
     'Я убежден, что в будущем исполнятся мои желания и планы.',
     'Приключения и риск меня привлекают, если в них мне достается первая роль.',
-    'Я допускаю опеку над собой в повседневной жизни,но не над моим душевным миром.',
-    'Посещал школу регулярно и всегда активно участвовалв общественной работе.',
+    'Я допускаю опеку над собой в повседневной жизни, но не над моим душевным миром.',
+    'Посещал школу регулярно и всегда активно участвовал в общественной работе.',
     'Я хорошо сплю, а сновидениям значения не придаю.',
     'Еда меня интересует прежде всего как средство поддержать здоровье.',
     'Люблю одежду модную и необычную, которая невольно привлекает взоры.',
@@ -582,9 +582,9 @@ const state = {
     'Я считаю, что при неудачах нельзя отчаиваться.',
     'Я не нуждаюсь в наставлениях.',
     'В детстве я был капризным и раздражительным.',
-    'У меня встречаются приступы плохого самочувствияс раздражительностью и чувством тоски.',
+    'У меня встречаются приступы плохого самочувствия с раздражительностью и чувством тоски.',
     'Я просыпаюсь с мыслью, что сегодня надо будет сделать.',
-    'У меня сильное половое влечение, которое мне труднос держивать.',
+    'У меня сильное половое влечение, которое мне трудно сдерживать.',
     'Мне не раз приходилось убеждаться, что дружат из выгоды.',
     'Я стараюсь жить так, чтобы будущее было хорошим.',
     'Приключения я люблю только веселые и те, что хорошо кончаются.',
@@ -795,12 +795,30 @@ window.onload = function() {
       this.nextBtn.on('click', (e) => {
         if (state.result.extraInfo.gender) {
           this.modal.addClass('hidden');
+          this.container.addClass('hidden');
         }
       });
     },
-  }
+  };
 
   genderForm.init();
+
+  // Tell user result of form submition
+  const formModal = {
+    modal: $('.modal'),
+    container: $('.submit-result-contaner'),
+    messageOnFormSent: $('.submit-result-message > p'),
+    closeBtn: $('.modal .close-btn'),
+    modalBg: $('.modal-bg'),
+    init() {
+      this.closeBtn.on('click', () => {
+        this.modal.addClass('hidden');
+      });
+    },
+  };
+
+  formModal.init();
+
 
   // Init question list. We will use it into slider
   state.questions.forEach((el, i) => {
@@ -857,7 +875,7 @@ window.onload = function() {
     $(e.target.parentElement).toggleClass('active');
   });
 
-  $('.send-result > .btn').on('click', function(e) {
+  $('.send-result').on('submit', function(e) {
     e.preventDefault();
 
     const { accentuations } = state.result.extraInfo;
@@ -867,16 +885,47 @@ window.onload = function() {
       email,
     }
 
+    formModal.modal.removeClass('hidden');
+    formModal.container.removeClass('hidden');
+    formModal.messageOnFormSent.text('Отправка...')
     // Send ajax post request to send result
     $.ajax({
       type: 'POST',
       url: 'http://192.168.0.12:80/test-accentuations/send-email/index.php',
       data,
       success(data) {
-        console.log('success', data);
+        if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
+        else formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
       },
       error(data) {
-        console.log('error', data)
+        formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
+      }
+    });
+  })
+
+  $('.send-mistake').on('submit', function(e) {
+    e.preventDefault();
+
+    const { accentuations } = state.result.extraInfo;
+    const message = $('#mistake')[0].value;
+    const data = {
+      message,
+    }
+    
+    formModal.modal.removeClass('hidden');
+    formModal.container.removeClass('hidden');
+    formModal.messageOnFormSent.text('Отправка...')
+    // Send ajax post request to send result
+    $.ajax({
+      type: 'POST',
+      url: 'http://192.168.0.12:80/test-accentuations/mistake/index.php',
+      data,
+      success(data) {
+        if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
+        else formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
+      },
+      error(data) {
+        formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
       }
     });
   })
@@ -885,15 +934,16 @@ window.onload = function() {
   // Testing results
   state.result.extraInfo.gender = 'male';
   genderForm.modal.addClass('hidden');
+  genderForm.container.addClass('hidden');
 
-  // arrowsContainer.rightArrow.element.on('click', function() {
-  //   answers.setAnswers(state, answers.answers);
-  //   answers.processResults(state, processExtraInfo);
+  arrowsContainer.rightArrow.element.on('click', function() {
+    answers.setAnswers(state, answers.answers);
+    answers.processResults(state, processExtraInfo);
 
-  // });
+  });
 
-  answers.setAnswers(state, answers.answers);
-  answers.processResults(state, processExtraInfo);
+  // answers.setAnswers(state, answers.answers);
+  // answers.processResults(state, processExtraInfo);
 
   // console.table(state.result.extraInfo.accentuations);
   // console.log(state.result.extraInfo);

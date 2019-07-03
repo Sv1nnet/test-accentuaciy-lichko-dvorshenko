@@ -1,0 +1,18 @@
+@media screen and (min-width: 769px)
+  .body-content-container
+    position: absolute
+    width: 100%
+    top: 50%
+    transform: translateY(-50%)
+    min-height: 542px
+  .overlay  
+    & .overlay-content
+      transform: translateX(0)
+      opacity: 0 
+    .overlay-not-specialist
+      max-width: 768px
+      margin: 0 auto
+      float: none
+    &.active
+      & .overlay-content
+        opacity: 1

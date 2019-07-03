@@ -962,9 +962,22 @@ function findActualAccentuations(state) {
 
       const isStaying = restAccentuations.every((nextAccent) => {
         const comparingAccentName = Object.keys(nextAccent)[0];
-        const d = !!domination.find(acc => comparingAccentName === acc);
-        const c = !!combinations.find(acc => comparingAccentName === acc);
+
+        // Here I don't use these options:
+        // const d = !!domination.find(acc => comparingAccentName === acc);
+        // const c = !!combinations.find(acc => comparingAccentName === acc);
+        // because EI11 doesn't have .find on arrays and webpack doesn't replace this method with method that works
+        let d = false;
+        domination.forEach((acc) => {
+          if (comparingAccentName === acc) d = true;
+        });
+
+        let c = false;
+        combinations.forEach((acc) => {
+          if (comparingAccentName === acc) c = true;
+        });
         const result = d || c;
+
         return result;
       });
 

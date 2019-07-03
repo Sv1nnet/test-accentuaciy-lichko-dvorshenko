@@ -1,8 +1,8 @@
 // import $ from 'jquery';
-import createRollupContaner from './createRollupElement';
+import createRollupElement from './createRollupElement';
 
 class AccentuationContainer {
-  constructor(accentuation) {
+  constructor(accentuation, accentName) {
     const {
       name,
       description,
@@ -12,6 +12,7 @@ class AccentuationContainer {
       socialTraits,
       attitudeToWork,
       conflictSituations,
+      recommendations,
     } = accentuation;
 
     const descriptionElement = $('<p>', { text: description });
@@ -64,6 +65,28 @@ class AccentuationContainer {
       $('<li>', { text: trait }).appendTo(conflictSituationsElement);
     });
 
+    const adultsRecommendationsDescriiption = $('<p>', { text: 'В основу данного раздела положены рекомендации, предложенные А.С. Прутченковым и А.А. Сияловым (Эй ты. параноик! — М., 1994). И родителям, и учителям прежде всего следует знать характеристики типа акцентуации подростка и его специфические особенности. Кроме того, следует научить акцентуанта выполнять соответствующие ролевые упражнения и мотивировать их регулярное выполнение.' });
+
+    const adults = $('<ul>', { text: 'Рекомендации для родителей и учителей:' });
+    recommendations.adults.forEach((rec) => {
+      $('<li>', { text: rec }).appendTo(adults);
+    });
+
+    const subjectsRecommendationsDescriiption = $('<p>', { text: 'Желающим самим совершенствовать свою личность акцентуантам предлагаются приведенные в таблице упражнения в исполнении определенных для каждого типа акцентуации ролей.' });
+
+    const subjects = $('<ul>', { text: 'Рекомендации для проходящих тест:' });
+    recommendations.subjects.forEach((rec) => {
+      $('<li>', { text: `"${rec.name}" - ${rec.descriptopn}` }).appendTo(subjects);
+    });
+
+
+    const recommendationsElement = createRollupElement('Рекомендации', [
+      adultsRecommendationsDescriiption,
+      adults,
+      subjectsRecommendationsDescriiption,
+      subjects,
+    ]);
+
     this.infoElements = {
       domineTraitsElement,
       attractiveTraitsElement,
@@ -71,9 +94,10 @@ class AccentuationContainer {
       socialTraitsElement,
       attitudeToWorkElement,
       conflictSituationsElement,
+      recommendationsElement,
     };
 
-    this.container = createRollupContaner(name, [
+    this.container = createRollupElement(name, [
       descriptionElement,
       domineTraitsElement,
       attractiveTraitsElement,
@@ -81,6 +105,7 @@ class AccentuationContainer {
       socialTraitsElement,
       attitudeToWorkElement,
       conflictSituationsElement,
+      recommendationsElement,
     ]).appendTo('#accentuations-container');
   }
 }

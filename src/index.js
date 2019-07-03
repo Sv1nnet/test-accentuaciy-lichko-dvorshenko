@@ -46,7 +46,4 @@ window.onload = function() {
       spec.removeClass('active');
     }
   });
-
-  console.log('main index.js');
-
 };

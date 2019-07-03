@@ -7,7 +7,7 @@ import answerBar from './answerBar';
 import AccentuationContainer from './accentuationContainer';
 import createRollupElement from './createRollupElement';
 
-import answers from './completedTest';
+// import answers from './completedTest';
 
 const processExtraInfo = {
   setConformity(state) {
@@ -702,8 +702,7 @@ const state = {
       }
     }
   },
-  getAccentuationsInfo() { // Get info about accentuations form server and inject result in dom
-    const { accentuations } = state.result.extraInfo;
+  getAccentuationsInfo({ accentuations }) { // Get info about accentuations form server and inject result in dom
     const url = 'http://192.168.0.12:80/test-accentuations/info.php';
     const typesResultUl = $('#types-result');
     const { loader } = this;
@@ -735,7 +734,7 @@ const state = {
         // Create accentuations list
         for (const accent in data) {
           typesResultUl.append($('<li>', { text: data[accent].name }));
-          new AccentuationContainer(data[accent]);
+          new AccentuationContainer(data[accent], accent);
         }
 
         loader.addClass('hidden');
@@ -744,12 +743,14 @@ const state = {
         console.log('error', data)
       }
     });
+
+    $('footer').removeClass('hidden');
   },
   _questionRestoreInterval: undefined,
 };
 
 // TODO: Remove this on prod
-window.state = state;
+// window.state = state;
 
 // window.answers = answers.answers;
 // window.setAnswers = answers.setAnswers;
@@ -865,9 +866,9 @@ window.onload = function() {
   // Set right arrow event handler with questions list
   arrowsContainer.setRightArrowEventHanler(questionsList, progressBar, answerBar);
   // Display next question
-  // arrowsContainer.rightArrow.element.on('click', function() {
-  //   arrowsContainer.rightArrowEventHanler();
-  // });
+  arrowsContainer.rightArrow.element.on('click', function() {
+    arrowsContainer.rightArrowEventHanler();
+  });
 
   // Set activating action on rollup click
   $('.rollup-container a').on('click', function(e) {
@@ -932,15 +933,15 @@ window.onload = function() {
 
   // TODO: Remove this on prod
   // Testing results
-  state.result.extraInfo.gender = 'male';
-  genderForm.modal.addClass('hidden');
-  genderForm.container.addClass('hidden');
+  // state.result.extraInfo.gender = 'female';
+  // genderForm.modal.addClass('hidden');
+  // genderForm.container.addClass('hidden');
 
-  arrowsContainer.rightArrow.element.on('click', function() {
-    answers.setAnswers(state, answers.answers);
-    answers.processResults(state, processExtraInfo);
+  // arrowsContainer.rightArrow.element.on('click', function() {
+  //   answers.setAnswers(state, answers.answers);
+  //   answers.processResults(state, processExtraInfo);
 
-  });
+  // });
 
   // answers.setAnswers(state, answers.answers);
   // answers.processResults(state, processExtraInfo);

@@ -7,8 +7,6 @@ import answerBar from './answerBar';
 import AccentuationContainer from './accentuationContainer';
 import createRollupElement from './createRollupElement';
 
-// import answers from './completedTest';
-
 const processExtraInfo = {
   setConformity(state) {
     const conformity = $('#conformity');
@@ -749,13 +747,6 @@ const state = {
   _questionRestoreInterval: undefined,
 };
 
-// TODO: Remove this on prod
-// window.state = state;
-
-// window.answers = answers.answers;
-// window.setAnswers = answers.setAnswers;
-// window.processResults = answers.processResults;
-
 window.onload = function() {
   // Close loader
   $('#loader').addClass('hidden');
@@ -824,7 +815,6 @@ window.onload = function() {
   // Init question list. We will use it into slider
   state.questions.forEach((el, i) => {
     state.questionsList.add({
-      // question: i + 1 + '. ' + el,
       question: el,
       index: i + 1,
       answer: null,
@@ -930,22 +920,4 @@ window.onload = function() {
       }
     });
   })
-
-  // TODO: Remove this on prod
-  // Testing results
-  // state.result.extraInfo.gender = 'female';
-  // genderForm.modal.addClass('hidden');
-  // genderForm.container.addClass('hidden');
-
-  // arrowsContainer.rightArrow.element.on('click', function() {
-  //   answers.setAnswers(state, answers.answers);
-  //   answers.processResults(state, processExtraInfo);
-
-  // });
-
-  // answers.setAnswers(state, answers.answers);
-  // answers.processResults(state, processExtraInfo);
-
-  // console.table(state.result.extraInfo.accentuations);
-  // console.log(state.result.extraInfo);
 };

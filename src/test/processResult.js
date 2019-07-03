@@ -206,7 +206,6 @@ function processResults(state, processExtraInfo) {
 
   processChart(state);
   state.setExtraInfo(processExtraInfo);
-  // state.result.extraInfo.accentuations = [{ 'sensitive': 16 }];
   state.getAccentuationsInfo(state.result.extraInfo);
 }
 

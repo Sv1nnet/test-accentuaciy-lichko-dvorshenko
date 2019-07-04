@@ -2,7 +2,7 @@
 import createRollupElement from './createRollupElement';
 
 class AccentuationContainer {
-  constructor(accentuation, accentName) {
+  constructor(accentuation) {
     const {
       name,
       description,

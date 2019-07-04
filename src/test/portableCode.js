@@ -1030,7 +1030,6 @@ function findActualAccentuations(state) {
     return false;
   });
 
-  console.log('highestAccententuations', highestAccententuations);
   // Rule 6
   if (highestAccententuations.length === 1) {
     return highestAccententuations;

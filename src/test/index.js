@@ -7,6 +7,8 @@ import answerBar from './answerBar';
 import AccentuationContainer from './accentuationContainer';
 import createRollupElement from './createRollupElement';
 
+// import answers from './completedTest';
+
 const processExtraInfo = {
   setConformity(state) {
     const conformity = $('#conformity');
@@ -609,7 +611,7 @@ const state = {
   zeroAnswersList: undefined,
   extremeAnswersList: undefined,
   zeroAnswersHandled: false,
-  accentuationsInfo: undefined,
+  accentuationsInfo: [],
   result: {
     accentuations: {
       hyperthymic: 0,
@@ -732,7 +734,7 @@ const state = {
         // Create accentuations list
         for (const accent in data) {
           typesResultUl.append($('<li>', { text: data[accent].name }));
-          new AccentuationContainer(data[accent], accent);
+          state.accentuationsInfo.push(new AccentuationContainer(data[accent]));
         }
 
         loader.addClass('hidden');
@@ -746,6 +748,9 @@ const state = {
   },
   _questionRestoreInterval: undefined,
 };
+
+// TODO
+window.state = state;
 
 window.onload = function() {
   // Close loader
@@ -866,33 +871,34 @@ window.onload = function() {
     $(e.target.parentElement).toggleClass('active');
   });
 
-  $('.send-result').on('submit', function(e) {
-    e.preventDefault();
+  // Desided to not send result to email. Mb relese it in future
+  // $('.send-result').on('submit', function(e) {
+  //   e.preventDefault();
 
-    const { accentuations } = state.result.extraInfo;
-    const email = $('#email')[0].value;
-    const data = {
-      accentuations,
-      email,
-    }
+  //   const { accentuations } = state.result.extraInfo;
+  //   const email = $('#email')[0].value;
+  //   const data = {
+  //     accentuations,
+  //     email,
+  //   }
 
-    formModal.modal.removeClass('hidden');
-    formModal.container.removeClass('hidden');
-    formModal.messageOnFormSent.text('Отправка...')
-    // Send ajax post request to send result
-    $.ajax({
-      type: 'POST',
-      url: 'https://accentuations-lychko.ru/send-email/index.php',
-      data,
-      success(data) {
-        if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
-        else formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
-      },
-      error(data) {
-        formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
-      }
-    });
-  })
+  //   formModal.modal.removeClass('hidden');
+  //   formModal.container.removeClass('hidden');
+  //   formModal.messageOnFormSent.text('Отправка...')
+  //   // Send ajax post request to send result
+  //   $.ajax({
+  //     type: 'POST',
+  //     url: 'http://192.168.0.12:80/send-email/index.php',
+  //     data,
+  //     success(data) {
+  //       if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
+  //       else formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
+  //     },
+  //     error(data) {
+  //       formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
+  //     }
+  //   });
+  // })
 
   $('.send-mistake').on('submit', function(e) {
     e.preventDefault();
@@ -919,5 +925,15 @@ window.onload = function() {
         formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
       }
     });
-  })
+  });
+
+  // TODO: Remove this on prod
+  // Testing results
+  // state.result.extraInfo.gender = 'male';
+  // genderForm.modal.addClass('hidden');
+  // genderForm.container.addClass('hidden');
+  // arrowsContainer.rightArrow.element.on('click', function() {
+  //   answers.setAnswers(state, answers.answers);
+  //   answers.processResults(state, processExtraInfo);
+  // });
 };

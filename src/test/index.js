@@ -701,7 +701,7 @@ const state = {
     }
   },
   getAccentuationsInfo({ accentuations }) { // Get info about accentuations form server and inject result in dom
-    const url = 'http://192.168.0.12:80/test-accentuations/info.php';
+    const url = 'https://accentuations-lychko.ru/info.php';
     const typesResultUl = $('#types-result');
     const { loader } = this;
 
@@ -882,7 +882,7 @@ window.onload = function() {
     // Send ajax post request to send result
     $.ajax({
       type: 'POST',
-      url: 'http://192.168.0.12:80/test-accentuations/send-email/index.php',
+      url: 'https://accentuations-lychko.ru/send-email/index.php',
       data,
       success(data) {
         if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
@@ -909,7 +909,7 @@ window.onload = function() {
     // Send ajax post request to send result
     $.ajax({
       type: 'POST',
-      url: 'http://192.168.0.12:80/test-accentuations/mistake/index.php',
+      url: 'https://accentuations-lychko.ru/mistake/index.php',
       data,
       success(data) {
         if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')

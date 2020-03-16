@@ -703,7 +703,7 @@ const state = {
     }
   },
   getAccentuationsInfo({ accentuations }) { // Get info about accentuations form server and inject result in dom
-    const url = 'https://accentuations-lychko.ru/info.php';
+    const url = 'http://accentuations-lychko.ru/info.php';
     const typesResultUl = $('#types-result');
     const { loader } = this;
 
@@ -749,8 +749,6 @@ const state = {
   _questionRestoreInterval: undefined,
 };
 
-// TODO
-window.state = state;
 
 window.onload = function() {
   // Close loader
@@ -871,35 +869,6 @@ window.onload = function() {
     $(e.target.parentElement).toggleClass('active');
   });
 
-  // Desided to not send result to email. Mb relese it in future
-  // $('.send-result').on('submit', function(e) {
-  //   e.preventDefault();
-
-  //   const { accentuations } = state.result.extraInfo;
-  //   const email = $('#email')[0].value;
-  //   const data = {
-  //     accentuations,
-  //     email,
-  //   }
-
-  //   formModal.modal.removeClass('hidden');
-  //   formModal.container.removeClass('hidden');
-  //   formModal.messageOnFormSent.text('Отправка...')
-  //   // Send ajax post request to send result
-  //   $.ajax({
-  //     type: 'POST',
-  //     url: 'http://192.168.0.12:80/send-email/index.php',
-  //     data,
-  //     success(data) {
-  //       if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
-  //       else formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
-  //     },
-  //     error(data) {
-  //       formModal.messageOnFormSent.text('При отправке сообщения произошла ошибка!')
-  //     }
-  //   });
-  // })
-
   $('.send-mistake').on('submit', function(e) {
     e.preventDefault();
 
@@ -915,7 +884,7 @@ window.onload = function() {
     // Send ajax post request to send result
     $.ajax({
       type: 'POST',
-      url: 'https://accentuations-lychko.ru/mistake/index.php',
+      url: 'http://accentuations-lychko.ru/mistake/index.php',
       data,
       success(data) {
         if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')
@@ -929,7 +898,7 @@ window.onload = function() {
 
   // TODO: Remove this on prod
   // Testing results
-  // state.result.extraInfo.gender = 'male';
+  // state.result.extraInfo.gender = 'female';
   // genderForm.modal.addClass('hidden');
   // genderForm.container.addClass('hidden');
   // arrowsContainer.rightArrow.element.on('click', function() {

@@ -703,7 +703,7 @@ const state = {
     }
   },
   getAccentuationsInfo({ accentuations }) { // Get info about accentuations form server and inject result in dom
-    const url = 'http://accentuations-lychko.site/info.php';
+    const url = 'https://accentuations-lychko.site/info.php';
     const typesResultUl = $('#types-result');
     const { loader } = this;
 
@@ -884,7 +884,7 @@ window.onload = function() {
     // Send ajax post request to send result
     $.ajax({
       type: 'POST',
-      url: 'http://accentuations-lychko.site/mistake/index.php',
+      url: 'https://accentuations-lychko.site/mistake/index.php',
       data,
       success(data) {
         if (data === 'ok') formModal.messageOnFormSent.text('Сообщение отправлено, спасибо!')

@@ -870,6 +870,10 @@ function findProbableAccentuations(state) {
         probableAccentuations.push(accentuation);
       }
     });
+  } else {
+    tempAccentuations.forEach((accentuation) => {
+      probableAccentuations.push(accentuation);
+    });
   }
 
   return probableAccentuations;
@@ -902,19 +906,6 @@ function findActualAccentuations(state) {
       temp.push(accentuation);
     }
   });
-
-  // // Rule 5
-  // let highestAccent = temp[0];
-  // let highestAccentName = Object.keys(highestAccent)[0];
-
-  // temp.forEach((accentuation) => {
-  //   const accentName = Object.keys(accentuation)[0];
-
-  //   if (accentuation[accentName] > highestAccent[highestAccentName]) {
-  //     highestAccent = accentuation;
-  //     highestAccentName = accentName;
-  //   }
-  // });
 
   // Sort accentuation to the find hieghest accentuations those have 4 >= points gap or add all accentuations in highestAccententuations array
   temp.sort((firstAcc, secondAcc) => {

@@ -158,7 +158,7 @@ const arrowsContainer = {
           } else {
             state.zeroAnswersHandled = true;
             // processing results
-            results.processResults(state);
+            results.processResults(state, processExtraInfo);
           }
         }
       };
